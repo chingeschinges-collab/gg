@@ -1,6 +1,7 @@
 (function () {
-  var DESKTOP = '/desktop/desktop.html';
-  var MOBILE = '/mobile/mobile2.html';
+  var BASE = location.pathname.replace(/\/[^/]*$/, '') || '';
+  var DESKTOP = BASE + '/desktop/desktop.html';
+  var MOBILE = BASE + '/mobile/mobile2.html';
   var MIN_DESKTOP_WIDTH = 1024;
 
   function isMobile() {
