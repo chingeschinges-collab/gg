@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Table Players</title>
+<style>
+  :root{
+    --bg:#1c1f26; --panel:#262b34; --panel2:#2e343f; --line:#3a4150;
+    --text:#e7ebf1; --muted:#9aa3b2; --gold:#d4ac0d; --blue:#4db6e8;
+    --green:#2e9e4f; --red:#c0392b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;
+    background:var(--bg);color:var(--text);min-height:100vh}
+  header{background:var(--panel);border-bottom:1px solid var(--line);
+    padding:16px 22px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:5}
+  header h1{font-size:18px;margin:0;font-weight:600}
+  header .tag{color:var(--gold);font-weight:700}
+  .wrap{max-width:1000px;margin:0 auto;padding:22px 18px;display:grid;
+    grid-template-columns:300px 1fr;gap:22px}
+  @media (max-width:760px){.wrap{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+  .card h2{font-size:14px;margin:0 0 12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  label{display:block;font-size:12px;color:var(--muted);margin:10px 0 5px}
+  input{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:7px;
+    color:var(--text);padding:9px 11px;font-size:14px;outline:none}
+  input:focus{border-color:var(--gold)}
+  .seat-row{display:grid;grid-template-columns:26px 1fr 130px;gap:8px;align-items:center;margin-bottom:8px}
+  .seat-row .num{color:var(--muted);font-size:12px;text-align:center}
+  .seat-row input{padding:8px 10px}
+  .btn{border:none;border-radius:7px;padding:10px 16px;font-size:14px;font-weight:600;
+    cursor:pointer;color:#fff}
+  .btn.save{background:var(--gold);color:#241d00}
+  .btn.blue{background:var(--blue);color:#06222e}
+  .btn.red{background:var(--red)}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+  .row-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  #search{margin-bottom:10px}
+  .tbl-list{list-style:none;margin:0;padding:0;max-height:60vh;overflow-y:auto}
+  .tbl-list li{display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:9px 10px;border:1px solid var(--line);border-radius:7px;margin-bottom:6px;
+    background:var(--panel2);cursor:pointer;font-size:13px}
+  .tbl-list li:hover{border-color:var(--gold)}
+  .tbl-list li.active{border-color:var(--gold);background:#33383f}
+  .tbl-list li .nm{display:flex;align-items:center;gap:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tbl-list li .dot{color:var(--gold);font-size:11px;flex:0 0 auto}
+  .tbl-list li .plrs{color:var(--muted);font-size:12px;flex:0 0 auto;background:#1c2128;
+    border:1px solid var(--line);border-radius:10px;padding:1px 8px}
+  .empty{color:var(--muted);font-size:13px;padding:6px 2px}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    background:var(--green);color:#fff;padding:11px 20px;border-radius:8px;font-size:14px;
+    opacity:0;transition:opacity .25s;pointer-events:none;z-index:20}
+  .toast.show{opacity:1}
+  .hint{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.5}
+</style>
+</head>
+<body>
+<header>
+  <h1><span class="tag">ADMIN</span> · Table Players</h1>
+</header>
+
+<div class="wrap">
+  <!-- All tables -->
+  <div class="card">
+    <h2>Бүх ширээ (<span id="tbl-count">0</span>)</h2>
+    <input id="search" placeholder="Хайх..." autocomplete="off">
+    <ul class="tbl-list" id="tbl-list"></ul>
+    <div class="empty" id="tbl-empty">Ачааллаж байна...</div>
+    <div class="row-actions">
+      <button class="btn ghost" id="new-btn">+ Гараар нэмэх</button>
+    </div>
+    <p class="hint">Ширээ дээр дарж тоглогчдыг тохируулна. <span style="color:var(--gold)">●</span> = тохируулсан. Хажуугийн тоо нь тухайн ширээн дэх тоглогчийн тоо.</p>
+  </div>
+
+  <!-- Editor -->
+  <div class="card">
+    <h2>Ширээ засах</h2>
+    <label>Ширээний нэр (лобби дээрхтэй яг адил)</label>
+    <input id="table-name" placeholder="ж: 5K TEXAS-H" autocomplete="off" list="known-tables">
+    <datalist id="known-tables"></datalist>
+
+    <label style="margin-top:16px">Суудлууд (нэр + чип)</label>
+    <div id="seats"></div>
+
+    <div class="row-actions">
+      <button class="btn save" id="save-btn">Хадгалах</button>
+      <button class="btn ghost" id="clear-btn">Цэвэрлэх</button>
+      <button class="btn red" id="delete-btn" style="margin-left:auto">Устгах</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var KEY = 'hairaa_table_players';
+  var SEATS = 9;
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}'); }
+    catch (e) { return {}; }
+  }
+  function save(obj) {
+    try { localStorage.setItem(KEY, JSON.stringify(obj)); } catch (e) {}
+  }
+  function toast(msg, ok) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = ok === false ? '#c0392b' : '#2e9e4f';
+    t.classList.add('show');
+    setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+
+  // build seat inputs
+  var seatsEl = document.getElementById('seats');
+  for (var i = 0; i < SEATS; i++) {
+    var row = document.createElement('div');
+    row.className = 'seat-row';
+    row.innerHTML =
+      '<span class="num">' + (i + 1) + '</span>' +
+      '<input class="s-name" placeholder="Тоглогчийн нэр" autocomplete="off">' +
+      '<input class="s-stack" placeholder="Чип" inputmode="numeric" autocomplete="off">';
+    seatsEl.appendChild(row);
+  }
+  var nameInputs  = Array.prototype.slice.call(seatsEl.querySelectorAll('.s-name'));
+  var stackInputs = Array.prototype.slice.call(seatsEl.querySelectorAll('.s-stack'));
+  var tableNameEl = document.getElementById('table-name');
+
+  function fillEditor(name) {
+    selected = name || '';
+    tableNameEl.value = name || '';
+    var cfg = (load()[name] || []);
+    for (var i = 0; i < SEATS; i++) {
+      nameInputs[i].value  = cfg[i] && cfg[i].name  != null ? cfg[i].name  : '';
+      stackInputs[i].value = cfg[i] && cfg[i].stack != null ? cfg[i].stack : '';
+    }
+  }
+
+  var ALL = [];          // [{name, players, stakes, game}] from tables.json
+  var selected = '';
+
+  function renderList() {
+    var cfgs = load();
+    var q = (document.getElementById('search').value || '').toLowerCase();
+    var ul = document.getElementById('tbl-list');
+    var empty = document.getElementById('tbl-empty');
+    var dl = document.getElementById('known-tables');
+    ul.innerHTML = '';
+    dl.innerHTML = '';
+
+    // union of lobby tables + any configured-only tables not in the lobby
+    var list = ALL.slice();
+    var known = {};
+    ALL.forEach(function (t) { known[t.name] = 1; });
+    Object.keys(cfgs).forEach(function (nm) {
+      if (!known[nm]) list.push({ name: nm, players: '', stakes: '', game: '' });
+    });
+
+    var shown = list.filter(function (t) { return t.name.toLowerCase().indexOf(q) >= 0; });
+    empty.style.display = shown.length ? 'none' : 'block';
+    empty.textContent = ALL.length ? 'Илэрц алга.' : 'Ачааллаж байна...';
+
+    shown.forEach(function (t) {
+      var configured = !!cfgs[t.name];
+      var li = document.createElement('li');
+      if (t.name === selected) li.className = 'active';
+      li.innerHTML =
+        '<span class="nm">' + (configured ? '<span class="dot">●</span>' : '') +
+          '<span>' + t.name + '</span></span>' +
+        (t.players ? '<span class="plrs">' + t.players + '</span>' : '');
+      li.addEventListener('click', function () { selected = t.name; fillEditor(t.name); renderList(); });
+      ul.appendChild(li);
+      dl.appendChild(Object.assign(document.createElement('option'), { value: t.name }));
+    });
+    document.getElementById('tbl-count').textContent = list.length;
+  }
+
+  // Load the full lobby table list.
+  fetch('tables.json')
+    .then(function (r) { return r.json(); })
+    .then(function (data) { ALL = data || []; renderList(); })
+    .catch(function () { renderList(); });
+
+  document.getElementById('search').addEventListener('input', renderList);
+
+  document.getElementById('save-btn').addEventListener('click', function () {
+    var name = tableNameEl.value.trim();
+    if (!name) { toast('Ширээний нэр оруулна уу', false); return; }
+    var players = [];
+    for (var i = 0; i < SEATS; i++) {
+      var nm = nameInputs[i].value.trim();
+      var st = parseInt((stackInputs[i].value || '').replace(/[^\d]/g, ''), 10);
+      players.push(nm ? { name: nm, stack: isNaN(st) ? null : st } : null);
+    }
+    var all = load(); all[name] = players; save(all);
+    renderList();
+    toast('Хадгаллаа: ' + name);
+  });
+
+  document.getElementById('delete-btn').addEventListener('click', function () {
+    var name = tableNameEl.value.trim();
+    if (!name) return;
+    var all = load();
+    if (all[name]) { delete all[name]; save(all); renderList(); toast('Устгалаа'); }
+    fillEditor('');
+  });
+
+  document.getElementById('clear-btn').addEventListener('click', function () { fillEditor(tableNameEl.value.trim()); });
+  document.getElementById('new-btn').addEventListener('click', function () { fillEditor(''); tableNameEl.focus(); });
+  tableNameEl.addEventListener('change', function () { fillEditor(tableNameEl.value.trim()); });
+x
+  renderList();
+})();
+</script>
+</body>
+</html>

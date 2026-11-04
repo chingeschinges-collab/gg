@@ -1,0 +1,229 @@
+<style>
+/* ── Container ── */
+.widget-form-content {
+  background: #1e1f2e;
+  color: #fff;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Header ── */
+.form-header { padding: 18px 20px 14px; border-bottom: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; }
+.form-title { display: flex !important; align-items: center !important; justify-content: space-between !important; }
+.form-caption { color: #fff !important; font-size: 16px !important; font-weight: bold !important; text-transform: uppercase !important; letter-spacing: 1.5px !important; flex: 1; text-align: center; }
+
+/* ── Close button ── */
+.close-form .Icon__content { filter: brightness(2) !important; }
+
+/* ── Scrollable area ── */
+.form-fields-wrapper { flex: 1 !important; overflow: hidden !important; min-height: 0; }
+.scroll-panel { overflow-y: auto !important; overflow-x: hidden !important; }
+.scroll-wrapper { transform: none !important; padding: 4px 0; }
+.iScrollVerticalScrollbar { display: none !important; }
+
+/* ── Field layout: vertical (label above input) ── */
+.FormField_c_light { background: transparent !important; border: none !important; padding: 0 !important; }
+.FormField__content { display: flex !important; flex-direction: column !important; padding: 10px 20px 4px !important; gap: 6px !important; }
+.FormField__label { height: auto !important; }
+.FormField__label_text { color: rgba(255,255,255,0.75) !important; font-size: 13px !important; }
+.FormField__control { height: auto !important; overflow: visible !important; }
+.required { color: rgba(255,255,255,0.6) !important; font-size: 12px !important; }
+
+/* ── Text inputs ── */
+.Input_v_rounded.Input_c_blue,
+.Input_v_rounded.Input_c_blue.telephone-input {
+  background: #2b2d42 !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  border-radius: 8px !important;
+  color: #fff !important;
+  padding: 11px 14px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  box-shadow: none !important;
+  font-size: 14px !important;
+  height: auto !important;
+}
+.Input_v_rounded.Input_c_blue::placeholder { color: rgba(255,255,255,0.28) !important; }
+.Input_v_rounded.Input_c_blue:focus { border-color: #d4ac0d !important; outline: none !important; }
+.field-value-content-wrapper { width: 100%; }
+.telephone-input-wrapper, .InputField__with_icon { width: 100%; display: block !important; }
+
+/* ── Select ── */
+.Select_c_blue { background: #2b2d42 !important; border: 1px solid rgba(255,255,255,0.12) !important; border-radius: 8px !important; box-shadow: none !important; }
+.Select__button { padding: 11px 14px !important; }
+.Select__button_text { color: rgba(255,255,255,0.28) !important; font-size: 14px !important; }
+.Select__button_arrow { border-top-color: rgba(255,255,255,0.4) !important; }
+
+/* ── Checkbox ── */
+.Checkbox_c_blue { border: 2px solid rgba(255,255,255,0.3) !important; background: transparent !important; border-radius: 4px !important; }
+
+/* ── Submit button ── */
+.buttons-holder { padding: 12px 20px 16px; flex-shrink: 0; border-top: 1px solid rgba(255,255,255,0.1); }
+.SimpleButton.send-form { background: #c0392b !important; border-radius: 8px !important; width: 100% !important; height: 44px !important; border: none !important; }
+.SimpleButton.send-form .SimpleButton__text { color: #fff !important; font-weight: bold !important; text-transform: uppercase !important; font-size: 15px !important; letter-spacing: 1px !important; }
+.SimpleButton.send-form:active { background: #a93226 !important; }
+</style>
+<div class="widget-form-content">
+  <div class="form-header">
+    <div class="form-title">
+      <div class="panel button SimpleButton SimpleButton_v_transparent SimpleButton_c_blue SimpleButton_use_icon widget-form-button close-form SimpleButton_interactive" tabindex="0">
+        <div class="SimpleButton__content">
+          <div class="panel Icon Icon_v_default Icon_c_white Icon_val_close_popup SimpleButton__icon">
+            <div class="Icon__content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-caption">Бүртгүүлэх</div>
+      <div style="width:36px;"></div>
+    </div>
+  </div>
+  <div class="form-fields-wrapper">
+    <div class="scroll-panel" style="position:relative;height:100%;width:100%;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;">
+      <div class="scroll-wrapper" style="transform:none;">
+        <div class="form-fields">
+          <div class="field-wrapper nick-field-wrapper">
+            <div class="field-container nick-field-container">
+              <div class="panel FormField FormField_v_default FormField_c_light WidgetFormContainer__form_field input_form_field nick-field type_text nick FormField_useLabel">
+                <div class="FormField__content">
+                  <div class="FormField__label"><div class="FormField__label_text"><span>Хоч</span><span class="required"> *</span></div></div>
+                  <div class="FormField__control">
+                    <div class="field-value-content-wrapper">
+                      <input tabindex="0" class="Input Input_v_rounded Input_c_blue" placeholder="Хэрэглэгчийн ID (хоч) -оо энд бичнэ үү" type="text" spellcheck="false" data-input-key="" value="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-wrapper email-field-wrapper">
+            <div class="field-container email-field-container">
+              <div class="panel FormField FormField_v_default FormField_c_light WidgetFormContainer__form_field input_form_field email-field type_email email FormField_useLabel">
+                <div class="FormField__content">
+                  <div class="FormField__label"><div class="FormField__label_text"><span>И-мэйл</span><span class="required"> *</span></div></div>
+                  <div class="FormField__control">
+                    <div class="field-value-content-wrapper">
+                      <input tabindex="0" class="Input Input_v_rounded Input_c_blue" placeholder="Өөрийн имэйлийг энд бичнэ үү" type="email" spellcheck="false" data-input-key="" value="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-wrapper password-field-wrapper">
+            <div class="field-container password-field-container">
+              <div class="panel FormField FormField_v_default FormField_c_light WidgetFormContainer__form_field input_form_field password-field type_password password FormField_useLabel">
+                <div class="FormField__content">
+                  <div class="FormField__label"><div class="FormField__label_text"><span>Нууц үг</span><span class="required"> *</span></div></div>
+                  <div class="FormField__control">
+                    <div class="field-value-content-wrapper">
+                      <input tabindex="0" class="Input Input_v_rounded Input_c_blue" placeholder="Нууц үгээ энд оруулна уу" type="password" spellcheck="false" data-input-key="" value="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-wrapper password_confirm-field-wrapper">
+            <div class="field-container password_confirm-field-container">
+              <div class="panel FormField FormField_v_default FormField_c_light WidgetFormContainer__form_field input_form_field password_confirm-field type_password password_confirm FormField_useLabel">
+                <div class="FormField__content">
+                  <div class="FormField__label"><div class="FormField__label_text"><span>Нууц үг батлах</span><span class="required"> *</span></div></div>
+                  <div class="FormField__control">
+                    <div class="field-value-content-wrapper">
+                      <input tabindex="0" class="Input Input_v_rounded Input_c_blue" placeholder="Нууц үгээ энд оруулна уу" type="password" spellcheck="false" data-input-key="" value="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-wrapper skinKey-field-wrapper hiddenWrapper"><div class="field-container skinKey-field-container"></div></div>
+          <div class="field-wrapper auth-field-wrapper hiddenWrapper"><div class="field-container auth-field-container"></div></div>
+          <div class="field-wrapper notificationLang-field-wrapper hiddenWrapper"><div class="field-container notificationLang-field-container"></div></div>
+          <div class="field-wrapper sendInfoNotifications-field-wrapper hiddenWrapper"><div class="field-container sendInfoNotifications-field-container"></div></div>
+          <div class="field-wrapper sendSystemNotifications-field-wrapper hiddenWrapper"><div class="field-container sendSystemNotifications-field-container"></div></div>
+          <div class="field-wrapper referredBy-field-wrapper hiddenWrapper"><div class="field-container referredBy-field-container"></div></div>
+          <div class="field-wrapper phoneNumber-field-wrapper">
+            <div class="field-container phoneNumber-field-container">
+              <div class="panel FormField FormField_v_default FormField_c_light WidgetFormContainer__form_field input_form_field phoneNumber-field type_tel phoneNumber FormField_useLabel">
+                <div class="FormField__content">
+                  <div class="FormField__label"><div class="FormField__label_text"><span>Утас</span><span class="required"> *</span></div></div>
+                  <div class="FormField__control">
+                    <div class="telephone-input-wrapper">
+                      <div class="InputField__with_icon">
+                        <input tabindex="0" class="Input Input_v_rounded Input_c_blue telephone-input hasValue" placeholder="Утасны дугаараа энд оруулна уу" type="tel" spellcheck="false" data-input-key="" value="+976-__-__-____" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-wrapper bankCode-field-wrapper">
+            <div class="field-container bankCode-field-container">
+              <div class="panel FormField FormField_v_default FormField_c_light WidgetFormContainer__form_field select_form_field bankCode-field bankCode FormField_useLabel">
+                <div class="FormField__content">
+                  <div class="FormField__label"><div class="FormField__label_text"><span>Банкны нэр</span><span class="required"> *</span></div></div>
+                  <div class="FormField__control">
+                    <div class="panel Select Select_v_default Select_c_blue Select_use_text Select_use_arrow" tabindex="0">
+                      <div class="Select__content">
+                        <div class="panel button Select__button" tabindex="-1">
+                          <div class="button-content">
+                            <span class="Select__button_text">Банк сонгоно уу</span>
+                            <div class="Select__button_arrow"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-wrapper bankAccountNumber-field-wrapper">
+            <div class="field-container bankAccountNumber-field-container">
+              <div class="panel FormField FormField_v_default FormField_c_light WidgetFormContainer__form_field input_form_field bankAccountNumber-field type_text bankAccountNumber FormField_useLabel">
+                <div class="FormField__content">
+                  <div class="FormField__label"><div class="FormField__label_text"><span>Дансны дугаар</span><span class="required"> *</span></div></div>
+                  <div class="FormField__control">
+                    <div class="field-value-content-wrapper">
+                      <input tabindex="0" class="Input Input_v_rounded Input_c_blue" placeholder="Дансны дугаараа энд оруулна уу" type="text" spellcheck="false" data-input-key="" value="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-wrapper age-field-wrapper">
+            <div class="field-container age-field-container">
+              <div class="panel FormField FormField_v_default FormField_c_light WidgetFormContainer__form_field checkbox_form_field age-field age FormField_useLabel">
+                <div class="FormField__content" style="flex-direction:row !important;align-items:center;gap:10px;">
+                  <div class="FormField__control">
+                    <div class="panel Checkbox Checkbox_v_checkbox Checkbox_c_blue checkbox_form_field__checkbox" tabindex="0">
+                      <div class="Checkbox__content">
+                        <div class="panel Icon Icon_v_default Icon_c_light Icon_val_ Checkbox__checkmark"><div class="Icon__content"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="FormField__label" style="margin:0;"><div class="FormField__label_text"><span>18+ настай</span><span class="required"> *</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-wrapper countryId-field-wrapper hiddenWrapper"><div class="field-container countryId-field-container"></div></div>
+          <div class="field-wrapper bonusCode-field-wrapper hiddenWrapper"><div class="field-container bonusCode-field-container"></div></div>
+          <div style="height:8px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="buttons-holder">
+    <div class="panel button SimpleButton SimpleButton_v_flat SimpleButton_c_blue SimpleButton_use_text widget-form-button send-form SimpleButton_interactive" tabindex="0">
+      <div class="SimpleButton__content">
+        <div class="SimpleButton__text">Илгээх</div>
+      </div>
+    </div>
+  </div>
+</div>

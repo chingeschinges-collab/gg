@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: udach-artt
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --timeout 120
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        sync: false
+      - key: BASE_URL
+        sync: false
+      - key: RATE_WINDOW
+        value: 10
+      - key: RATE_LIMIT
+        value: 30
+      - key: TELEGRAM_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: BILLING_DAY
+        sync: false
