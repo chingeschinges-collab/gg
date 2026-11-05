@@ -82,6 +82,65 @@ def api_log(request):
 
 
 CONTACTS_FILE = os.path.join(ROOT, 'data', 'contacts.json')
+ACCOUNTS_FILE = os.path.join(ROOT, 'data', 'accounts.json')
+
+def _load_accounts():
+    try:
+        with open(ACCOUNTS_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return []
+
+def _save_accounts(accounts):
+    os.makedirs(os.path.dirname(ACCOUNTS_FILE), exist_ok=True)
+    with open(ACCOUNTS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(accounts, f, ensure_ascii=False, indent=2)
+
+@require_http_methods(['GET', 'POST', 'DELETE'])
+def api_accounts(request):
+    from django.conf import settings
+    admin_key = getattr(settings, 'ADMIN_KEY', None)
+
+    # Public GET — no key needed (users see deposit accounts)
+    if request.method == 'GET':
+        return JsonResponse(_load_accounts(), safe=False)
+
+    # POST / DELETE — admin only
+    if admin_key and request.GET.get('key') != admin_key:
+        return HttpResponse(status=403)
+
+    if request.method == 'POST':
+        try:
+            body = json.loads(request.body.decode('utf-8'))
+            bank    = str(body.get('bank', '')).strip()[:60]
+            number  = str(body.get('number', '')).strip()[:40]
+            holder  = str(body.get('holder', '')).strip()[:60]
+            note    = str(body.get('note', '')).strip()[:200]
+            if not bank or not number:
+                return HttpResponse(status=400)
+            from datetime import datetime
+            acc = {
+                'id': int(datetime.utcnow().timestamp() * 1000),
+                'bank': bank, 'number': number, 'holder': holder, 'note': note,
+            }
+            accounts = _load_accounts()
+            accounts.append(acc)
+            _save_accounts(accounts)
+            return JsonResponse(acc)
+        except Exception:
+            return HttpResponse(status=400)
+
+    if request.method == 'DELETE':
+        try:
+            body = json.loads(request.body.decode('utf-8'))
+            aid = body.get('id')
+            accounts = [a for a in _load_accounts() if a.get('id') != aid]
+            _save_accounts(accounts)
+            return JsonResponse({'ok': True})
+        except Exception:
+            return HttpResponse(status=400)
+
+    return HttpResponse(status=405)
 
 def _load_contacts():
     try:

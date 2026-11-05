@@ -2,101 +2,6 @@
   'use strict';
 
   /* ═══════════════════════════════════════
-     0. CONTACT POPUP — Гомдол / Саналууд
-  ═══════════════════════════════════════ */
-  function buildContactPopup() {
-    if (!document.getElementById('contact-css')) {
-      var s = document.createElement('style');
-      s.id = 'contact-css';
-      s.textContent =
-        '#contact-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10002;align-items:center;justify-content:center;}' +
-        '#contact-modal{position:relative;background:#0a0a0f;border-radius:14px;width:min(94vw,640px);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.8);}' +
-        '#contact-modal .cm-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;}' +
-        '#contact-modal .cm-title{color:#fff;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}' +
-        '#contact-modal .cm-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;line-height:1;padding:0;}' +
-        '#contact-modal .cm-close:hover{color:#fff;}' +
-        '#contact-modal .cm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.07);border-top:1px solid rgba(255,255,255,.07);}' +
-        '#contact-modal .cm-item{background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 12px 24px;cursor:pointer;gap:14px;transition:background .15s;}' +
-        '#contact-modal .cm-item:hover{background:#14141f;}' +
-        '#contact-modal .cm-item svg{width:56px;height:56px;}' +
-        '#contact-modal .cm-item span{color:#fff;font-size:12px;text-align:center;line-height:1.4;font-weight:500;}' +
-        /* sub-form */
-        '#contact-modal .cm-form-view{padding:22px 24px 24px;display:none;}' +
-        '#contact-modal .cm-back{background:none;border:none;color:#d4ac0d;font-size:13px;cursor:pointer;padding:0 0 14px;display:flex;align-items:center;gap:5px;}' +
-        '#contact-modal .cm-form-title{color:#fff;font-size:15px;font-weight:700;margin-bottom:16px;}' +
-        '#contact-modal .cm-label{display:block;color:rgba(255,255,255,.55);font-size:12px;margin:10px 0 5px;}' +
-        '#contact-modal .cm-input,#contact-modal .cm-textarea{width:100%;background:#1a1a2a;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;padding:11px 14px;font-size:14px;box-sizing:border-box;outline:none;font-family:inherit;}' +
-        '#contact-modal .cm-input:focus,#contact-modal .cm-textarea:focus{border-color:#d4ac0d;}' +
-        '#contact-modal .cm-textarea{resize:vertical;min-height:90px;}' +
-        '#contact-modal .cm-submit{margin-top:16px;width:100%;background:#d4ac0d;color:#1a1200;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;}' +
-        '#contact-modal .cm-submit:disabled{opacity:.5;}' +
-        '#contact-modal .cm-success{text-align:center;padding:32px 0;color:#2ecc71;font-size:15px;font-weight:600;display:none;}' +
-        '#contact-modal .cm-err{color:#e74c3c;font-size:12px;margin-top:8px;text-align:center;display:none;}';
-      document.head.appendChild(s);
-    }
-
-    function icon(type) {
-      var icons = {
-        vip: '<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="22" r="14" stroke="#d4ac0d" stroke-width="3"/><path d="M32 8l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z" fill="#d4ac0d"/><path d="M14 42c0-3 8-5 18-5s18 2 18 5v6H14v-6z" fill="#d4ac0d" opacity=".3"/><rect x="20" y="48" width="24" height="4" rx="2" fill="#d4ac0d"/></svg>',
-        deposit: '<svg viewBox="0 0 64 64" fill="none"><rect x="8" y="12" width="34" height="42" rx="4" stroke="#d4ac0d" stroke-width="3"/><path d="M8 20h34" stroke="#d4ac0d" stroke-width="2"/><path d="M16 30h18M16 38h12" stroke="#d4ac0d" stroke-width="2.5" stroke-linecap="round"/><circle cx="50" cy="44" r="10" fill="#0a0a0f" stroke="#d4ac0d" stroke-width="2.5"/><path d="M50 40v8M46 44h8" stroke="#d4ac0d" stroke-width="2" stroke-linecap="round"/></svg>',
-        other: '<svg viewBox="0 0 64 64" fill="none"><rect x="10" y="8" width="30" height="38" rx="4" stroke="#d4ac0d" stroke-width="3"/><path d="M10 18h30" stroke="#d4ac0d" stroke-width="2"/><path d="M18 28h14M18 36h10" stroke="#d4ac0d" stroke-width="2.5" stroke-linecap="round"/><path d="M34 38l16 16" stroke="#d4ac0d" stroke-width="3" stroke-linecap="round"/><circle cx="48" cy="52" r="4" fill="#d4ac0d"/></svg>',
-        status: '<svg viewBox="0 0 64 64" fill="none"><circle cx="28" cy="28" r="17" stroke="#d4ac0d" stroke-width="3"/><path d="M40 40l14 14" stroke="#d4ac0d" stroke-width="3" stroke-linecap="round"/><path d="M20 28l6 6 10-10" stroke="#d4ac0d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-        telegram: '<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="26" fill="#229ED9"/><path d="M14 31l32-13-10 30-7-11-15-6z" fill="#fff" opacity=".3"/><path d="M14 31l32-13-10 30-7-11z" fill="#fff"/><path d="M28 42l3-8 7-6" stroke="#229ED9" stroke-width="2"/></svg>',
-        app: '<svg viewBox="0 0 64 64" fill="none"><path d="M32 10L52 50H12L32 10z" fill="#00C853" opacity=".9"/><path d="M32 10L52 50H32V10z" fill="#00C853"/><path d="M32 10L12 50H32V10z" fill="#4CAF50" opacity=".7"/><circle cx="32" cy="10" r="4" fill="#fff"/><rect x="22" y="46" width="20" height="6" rx="3" fill="#d4ac0d"/></svg>'
-      };
-      return icons[type] || '';
-    }
-
-    var el = document.createElement('div');
-    el.id = 'contact-popup';
-    el.innerHTML =
-      '<div id="contact-modal-bg" style="position:absolute;inset:0;background:rgba(0,0,0,.72);"></div>' +
-      '<div id="contact-modal">' +
-        '<div class="cm-header">' +
-          '<span class="cm-title">Contact Admin</span>' +
-          '<button class="cm-close" id="contact-close-btn">✕</button>' +
-        '</div>' +
-        '<div id="cm-grid-view">' +
-          '<div class="cm-grid">' +
-            '<div class="cm-item" data-kind="VIP эрх авах">' + icon('vip') + '<span>VIP эрх авах</span></div>' +
-            '<div class="cm-item" data-kind="Оороогүй цэнэгийн хүсэлт">' + icon('deposit') + '<span>Оороогүй цэнэгийн<br>хүсэлт гаргах</span></div>' +
-            '<div class="cm-item" data-kind="Бусад хүсэлт">' + icon('other') + '<span>Бусад хүсэлт<br>гаргах</span></div>' +
-            '<div class="cm-item" id="cm-status-btn">' + icon('status') + '<span>Хүсэлтийн хариу<br>шалгах</span></div>' +
-            '<div class="cm-item" id="cm-telegram-btn">' + icon('telegram') + '<span>Telegram чатанд<br>нэгдэх</span></div>' +
-            '<div class="cm-item" id="cm-app-btn">' + icon('app') + '<span>Апп татах</span></div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="cm-form-view" id="cm-form-view">' +
-          '<button class="cm-back" id="cm-back-btn">← Буцах</button>' +
-          '<div class="cm-form-title" id="cm-form-title"></div>' +
-          '<div id="cm-success" class="cm-success">✅ Таны хүсэлт амжилттай илгээгдлээ!</div>' +
-          '<div id="cm-fields">' +
-            '<label class="cm-label">Нэрэглэгчийн нэр</label>' +
-            '<input id="cm-name" class="cm-input" type="text" placeholder="Нэр / хоч" autocomplete="off">' +
-            '<label class="cm-label">Мэдэгдэл <span style="color:#e74c3c">*</span></label>' +
-            '<textarea id="cm-message" class="cm-textarea" placeholder="Дэлгэрэнгүй бичнэ үү..."></textarea>' +
-            '<div id="cm-err" class="cm-err"></div>' +
-            '<button class="cm-submit" id="cm-submit-btn">ИЛГЭЭХ</button>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-    return el;
-  }
-
-  function showContact() {
-    var p = document.getElementById('contact-popup');
-    if (!p) return;
-    document.getElementById('cm-grid-view').style.display = '';
-    document.getElementById('cm-form-view').style.display = 'none';
-    p.style.display = 'flex';
-  }
-
-  function hideContact() {
-    var p = document.getElementById('contact-popup');
-    if (p) p.style.display = 'none';
-  }
-
-  /* ═══════════════════════════════════════
      1. LOGIN POPUP  — loginui.html-н HTML
   ═══════════════════════════════════════ */
   function buildLoginPopup() {
@@ -2162,6 +2067,193 @@
   }
 
   /* ═══════════════════════════════════════
+     2b. CONTACT ADMIN POPUP
+  ═══════════════════════════════════════ */
+  function buildContactPopup() {
+    if (!document.getElementById('contact-css')) {
+      var s = document.createElement('style');
+      s.id = 'contact-css';
+      s.textContent =
+        '#contact-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10002;align-items:center;justify-content:center;}' +
+        '#contact-modal{position:relative;background:#0a0a0f;border-radius:14px;width:min(94vw,640px);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.8);}' +
+        '#contact-modal .cm-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;}' +
+        '#contact-modal .cm-title{color:#fff;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}' +
+        '#contact-modal .cm-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;line-height:1;padding:0;}' +
+        '#contact-modal .cm-close:hover{color:#fff;}' +
+        '#contact-modal .cm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.07);border-top:1px solid rgba(255,255,255,.07);}' +
+        '#contact-modal .cm-item{background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 12px 24px;cursor:pointer;gap:14px;transition:background .15s;}' +
+        '#contact-modal .cm-item:hover{background:#14141f;}' +
+        '#contact-modal .cm-item svg{width:56px;height:56px;}' +
+        '#contact-modal .cm-item span{color:#fff;font-size:12px;text-align:center;line-height:1.4;font-weight:500;}' +
+        '#contact-modal .cm-form-view{padding:22px 24px 24px;display:none;}' +
+        '#contact-modal .cm-back{background:none;border:none;color:#d4ac0d;font-size:13px;cursor:pointer;padding:0 0 14px;display:flex;align-items:center;gap:5px;}' +
+        '#contact-modal .cm-form-title{color:#fff;font-size:15px;font-weight:700;margin-bottom:16px;}' +
+        '#contact-modal .cm-label{display:block;color:rgba(255,255,255,.55);font-size:12px;margin:10px 0 5px;}' +
+        '#contact-modal .cm-input,#contact-modal .cm-textarea{width:100%;background:#1a1a2a;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;padding:11px 14px;font-size:14px;box-sizing:border-box;outline:none;font-family:inherit;}' +
+        '#contact-modal .cm-input:focus,#contact-modal .cm-textarea:focus{border-color:#d4ac0d;}' +
+        '#contact-modal .cm-textarea{resize:vertical;min-height:90px;}' +
+        '#contact-modal .cm-submit{margin-top:16px;width:100%;background:#d4ac0d;color:#1a1200;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;}' +
+        '#contact-modal .cm-submit:disabled{opacity:.5;}' +
+        '#contact-modal .cm-success{text-align:center;padding:32px 0;color:#2ecc71;font-size:15px;font-weight:600;display:none;}' +
+        '#contact-modal .cm-err{color:#e74c3c;font-size:12px;margin-top:8px;text-align:center;display:none;}';
+      document.head.appendChild(s);
+    }
+
+    function icon(type) {
+      var icons = {
+        vip: '<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="22" r="14" stroke="#d4ac0d" stroke-width="3"/><path d="M32 8l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z" fill="#d4ac0d"/><path d="M14 42c0-3 8-5 18-5s18 2 18 5v6H14v-6z" fill="#d4ac0d" opacity=".3"/><rect x="20" y="48" width="24" height="4" rx="2" fill="#d4ac0d"/></svg>',
+        deposit: '<svg viewBox="0 0 64 64" fill="none"><rect x="8" y="12" width="34" height="42" rx="4" stroke="#d4ac0d" stroke-width="3"/><path d="M8 20h34" stroke="#d4ac0d" stroke-width="2"/><path d="M16 30h18M16 38h12" stroke="#d4ac0d" stroke-width="2.5" stroke-linecap="round"/><circle cx="50" cy="44" r="10" fill="#0a0a0f" stroke="#d4ac0d" stroke-width="2.5"/><path d="M50 40v8M46 44h8" stroke="#d4ac0d" stroke-width="2" stroke-linecap="round"/></svg>',
+        other: '<svg viewBox="0 0 64 64" fill="none"><rect x="10" y="8" width="30" height="38" rx="4" stroke="#d4ac0d" stroke-width="3"/><path d="M10 18h30" stroke="#d4ac0d" stroke-width="2"/><path d="M18 28h14M18 36h10" stroke="#d4ac0d" stroke-width="2.5" stroke-linecap="round"/><path d="M34 38l16 16" stroke="#d4ac0d" stroke-width="3" stroke-linecap="round"/><circle cx="48" cy="52" r="4" fill="#d4ac0d"/></svg>',
+        status: '<svg viewBox="0 0 64 64" fill="none"><circle cx="28" cy="28" r="17" stroke="#d4ac0d" stroke-width="3"/><path d="M40 40l14 14" stroke="#d4ac0d" stroke-width="3" stroke-linecap="round"/><path d="M20 28l6 6 10-10" stroke="#d4ac0d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        telegram: '<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="26" fill="#229ED9"/><path d="M14 31l32-13-10 30-7-11-15-6z" fill="#fff" opacity=".3"/><path d="M14 31l32-13-10 30-7-11z" fill="#fff"/><path d="M28 42l3-8 7-6" stroke="#229ED9" stroke-width="2"/></svg>',
+        app: '<svg viewBox="0 0 64 64" fill="none"><path d="M32 10L52 50H12L32 10z" fill="#00C853" opacity=".9"/><path d="M32 10L52 50H32V10z" fill="#00C853"/><path d="M32 10L12 50H32V10z" fill="#4CAF50" opacity=".7"/><circle cx="32" cy="10" r="4" fill="#fff"/><rect x="22" y="46" width="20" height="6" rx="3" fill="#d4ac0d"/></svg>'
+      };
+      return icons[type] || '';
+    }
+
+    var el = document.createElement('div');
+    el.id = 'contact-popup';
+    el.innerHTML =
+      '<div id="contact-modal-bg" style="position:absolute;inset:0;background:rgba(0,0,0,.72);"></div>' +
+      '<div id="contact-modal">' +
+        '<div class="cm-header">' +
+          '<span class="cm-title">Contact Admin</span>' +
+          '<button class="cm-close" id="contact-close-btn">✕</button>' +
+        '</div>' +
+        '<div id="cm-grid-view">' +
+          '<div class="cm-grid">' +
+            '<div class="cm-item" data-kind="VIP эрх авах">' + icon('vip') + '<span>VIP эрх авах</span></div>' +
+            '<div class="cm-item" data-kind="Оороогүй цэнэгийн хүсэлт">' + icon('deposit') + '<span>Оороогүй цэнэгийн<br>хүсэлт гаргах</span></div>' +
+            '<div class="cm-item" data-kind="Бусад хүсэлт">' + icon('other') + '<span>Бусад хүсэлт<br>гаргах</span></div>' +
+            '<div class="cm-item" id="cm-status-btn">' + icon('status') + '<span>Хүсэлтийн хариу<br>шалгах</span></div>' +
+            '<div class="cm-item" id="cm-telegram-btn">' + icon('telegram') + '<span>Telegram чатанд<br>нэгдэх</span></div>' +
+            '<div class="cm-item" id="cm-app-btn">' + icon('app') + '<span>Апп татах</span></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="cm-form-view" id="cm-form-view">' +
+          '<button class="cm-back" id="cm-back-btn">← Буцах</button>' +
+          '<div class="cm-form-title" id="cm-form-title"></div>' +
+          '<div id="cm-success" class="cm-success">✅ Таны хүсэлт амжилттай илгээгдлээ!</div>' +
+          '<div id="cm-fields">' +
+            '<label class="cm-label">Нэрэглэгчийн нэр</label>' +
+            '<input id="cm-name" class="cm-input" type="text" placeholder="Нэр / хоч" autocomplete="off">' +
+            '<label class="cm-label">Мэдэгдэл <span style="color:#e74c3c">*</span></label>' +
+            '<textarea id="cm-message" class="cm-textarea" placeholder="Дэлгэрэнгүй бичнэ үү..."></textarea>' +
+            '<div id="cm-err" class="cm-err"></div>' +
+            '<button class="cm-submit" id="cm-submit-btn">ИЛГЭЭХ</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    return el;
+  }
+
+  function showContact() {
+    var p = document.getElementById('contact-popup');
+    if (!p) return;
+    document.getElementById('cm-grid-view').style.display = '';
+    document.getElementById('cm-form-view').style.display = 'none';
+    p.style.display = 'flex';
+  }
+
+  function hideContact() {
+    var p = document.getElementById('contact-popup');
+    if (p) p.style.display = 'none';
+  }
+
+  /* ═══════════════════════════════════════
+     2c. КАСС (CASHIER) POPUP
+  ═══════════════════════════════════════ */
+  function buildCashierPopup() {
+    if (!document.getElementById('cashier-css')) {
+      var s = document.createElement('style');
+      s.id = 'cashier-css';
+      s.textContent =
+        '#cashier-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10002;align-items:center;justify-content:center;}' +
+        '#cashier-modal{position:relative;background:#0a0a0f;border-radius:14px;width:min(94vw,520px);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.85);}' +
+        '#cashier-modal .ch-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid rgba(255,255,255,.07);}' +
+        '#cashier-modal .ch-title{color:#d4ac0d;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:8px;}' +
+        '#cashier-modal .ch-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;line-height:1;padding:0;}' +
+        '#cashier-modal .ch-close:hover{color:#fff;}' +
+        '#cashier-modal .ch-body{padding:18px 22px 24px;}' +
+        '#cashier-modal .ch-label{color:rgba(255,255,255,.45);font-size:11px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px;}' +
+        '#cashier-modal .ch-card{background:#14141f;border:1px solid rgba(212,172,13,.25);border-radius:10px;padding:16px 18px;margin-bottom:12px;cursor:pointer;transition:border-color .15s;}' +
+        '#cashier-modal .ch-card:hover{border-color:#d4ac0d;}' +
+        '#cashier-modal .ch-card:last-child{margin-bottom:0;}' +
+        '#cashier-modal .ch-bank{font-size:12px;font-weight:700;color:#d4ac0d;margin-bottom:4px;}' +
+        '#cashier-modal .ch-num{font-size:20px;font-weight:700;letter-spacing:1.5px;color:#fff;margin-bottom:3px;}' +
+        '#cashier-modal .ch-holder{font-size:13px;color:rgba(255,255,255,.55);}' +
+        '#cashier-modal .ch-note{font-size:12px;color:rgba(255,255,255,.35);margin-top:6px;}' +
+        '#cashier-modal .ch-copy{float:right;background:rgba(212,172,13,.15);border:1px solid rgba(212,172,13,.3);color:#d4ac0d;border-radius:6px;font-size:11px;padding:3px 10px;cursor:pointer;}' +
+        '#cashier-modal .ch-copy:hover{background:rgba(212,172,13,.3);}' +
+        '#cashier-modal .ch-empty{color:rgba(255,255,255,.35);text-align:center;padding:32px 0;font-size:14px;}' +
+        '#cashier-modal .ch-copied{color:#2ecc71;font-size:11px;float:right;padding:3px 10px;}';
+      document.head.appendChild(s);
+    }
+    var el = document.createElement('div');
+    el.id = 'cashier-popup';
+    el.innerHTML =
+      '<div id="cashier-bg" style="position:absolute;inset:0;background:rgba(0,0,0,.72);"></div>' +
+      '<div id="cashier-modal">' +
+        '<div class="ch-header">' +
+          '<span class="ch-title">💳 Мөнгөний касс</span>' +
+          '<button class="ch-close" id="cashier-close-btn">✕</button>' +
+        '</div>' +
+        '<div class="ch-body">' +
+          '<div class="ch-label">Цэнэглэх данснууд</div>' +
+          '<div id="cashier-accounts"><div class="ch-empty">Ачааллаж байна...</div></div>' +
+        '</div>' +
+      '</div>';
+    return el;
+  }
+
+  function loadCashierAccounts() {
+    fetch('/api/accounts')
+      .then(function (r) { return r.json(); })
+      .then(function (list) {
+        var el = document.getElementById('cashier-accounts');
+        if (!list || !list.length) {
+          el.innerHTML = '<div class="ch-empty">Данс байхгүй байна. Дараа шалгана уу.</div>';
+          return;
+        }
+        el.innerHTML = list.map(function (a, i) {
+          return '<div class="ch-card">' +
+            '<button class="ch-copy" data-num="' + a.number + '">Хуулах</button>' +
+            '<div class="ch-bank">🏦 ' + a.bank + '</div>' +
+            '<div class="ch-num">' + a.number + '</div>' +
+            (a.holder ? '<div class="ch-holder">👤 ' + a.holder + '</div>' : '') +
+            (a.note ? '<div class="ch-note">' + a.note + '</div>' : '') +
+          '</div>';
+        }).join('');
+        el.querySelectorAll('.ch-copy').forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            var num = btn.getAttribute('data-num');
+            navigator.clipboard.writeText(num).then(function () {
+              btn.textContent = '✓ Хуулагдлаа';
+              btn.className = 'ch-copied';
+              setTimeout(function () { btn.textContent = 'Хуулах'; btn.className = 'ch-copy'; }, 2000);
+            });
+          });
+        });
+      })
+      .catch(function () {
+        document.getElementById('cashier-accounts').innerHTML = '<div class="ch-empty" style="color:#e74c3c">Серверт холбогдсонгүй.</div>';
+      });
+  }
+
+  function showCashier() {
+    var p = document.getElementById('cashier-popup');
+    if (!p) return;
+    p.style.display = 'flex';
+    loadCashierAccounts();
+  }
+
+  function hideCashier() {
+    var p = document.getElementById('cashier-popup');
+    if (p) p.style.display = 'none';
+  }
+
+  /* ═══════════════════════════════════════
      3. BURGER MENU / SIDEBAR
   ═══════════════════════════════════════ */
   var sidebarInner   = null;
@@ -2238,7 +2330,7 @@
 
               '<div id="sidebar-contact-btn"',
               '     class="panel button SimpleButton SimpleButton_v_text SimpleButton_c_light',
-              '            SimpleButton_use_text_use_icon LobbySidebarContainer__action SimpleButton_interactive"',
+              '            SimpleButton_use_text_use_icon LobbySidebarContainer__action contact SimpleButton_interactive"',
               '     tabindex="-1">',
                 '<div class="SimpleButton__content">',
                   '<div class="panel Icon Icon_v_default Icon_c_white Icon_val_support SimpleButton__icon LobbySidebarContainer__action__icon" tabindex="-1">',
@@ -2823,7 +2915,6 @@
     document.getElementById('contact-close-btn').addEventListener('click', hideContact);
     document.getElementById('contact-modal-bg').addEventListener('click', hideContact);
 
-    /* Grid item clicks */
     document.querySelectorAll('#cm-grid-view .cm-item[data-kind]').forEach(function (item) {
       item.addEventListener('click', function () {
         var kind = item.getAttribute('data-kind');
@@ -2907,7 +2998,7 @@
     /* ESC */
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
-        hideLogin(); hideRegister(); hideSettings(); closeSidebar(); hideContact();
+        hideLogin(); hideRegister(); hideSettings(); closeSidebar(); hideContact(); hideCashier();
       }
     });
 
@@ -2916,8 +3007,12 @@
     if (loginBtn) loginBtn.addEventListener('click', showLogin);
 
     /* ── КАСС товч ── */
+    document.body.appendChild(buildCashierPopup());
+    document.getElementById('cashier-close-btn').addEventListener('click', hideCashier);
+    document.getElementById('cashier-bg').addEventListener('click', hideCashier);
+
     var cashierBtn = document.querySelector('.CashierButton');
-    if (cashierBtn) cashierBtn.addEventListener('click', showLogin);
+    if (cashierBtn) cashierBtn.addEventListener('click', showCashier);
 
     /* ── Burger menu ── */
     var menuBtn = document.querySelector('.menu_button');
@@ -3537,8 +3632,6 @@
   window.hideRegister = hideRegister;
   window.showSettings = showSettings;
   window.hideSettings = hideSettings;
-  window.showContact  = showContact;
-  window.hideContact  = hideContact;
   window.openSidebar  = openSidebar;
   window.closeSidebar = closeSidebar;
   window.openTable    = openTable;
