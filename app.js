@@ -9,48 +9,73 @@
       var s = document.createElement('style');
       s.id = 'contact-css';
       s.textContent =
-        '#contact-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;align-items:center;justify-content:center;}' +
-        '#contact-modal{position:relative;background:#232334;border-radius:12px;width:min(92vw,420px);padding:0;overflow:hidden;}' +
-        '#contact-modal .cm-header{background:#1a1a2e;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}' +
-        '#contact-modal .cm-title{color:#d4ac0d;font-size:16px;font-weight:700;letter-spacing:.5px;}' +
-        '#contact-modal .cm-close{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;opacity:.7;padding:0 4px;}' +
-        '#contact-modal .cm-close:hover{opacity:1;}' +
-        '#contact-modal .cm-body{padding:18px 20px 20px;}' +
-        '#contact-modal label{display:block;color:rgba(255,255,255,.65);font-size:12px;margin:12px 0 5px;}' +
-        '#contact-modal input,#contact-modal select,#contact-modal textarea{width:100%;background:#2b2d42;border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#fff;padding:10px 13px;font-size:14px;box-sizing:border-box;outline:none;font-family:inherit;}' +
-        '#contact-modal input:focus,#contact-modal select:focus,#contact-modal textarea:focus{border-color:#d4ac0d;}' +
-        '#contact-modal textarea{resize:vertical;min-height:100px;}' +
-        '#contact-modal select{appearance:none;cursor:pointer;}' +
-        '#contact-modal .cm-submit{margin-top:16px;width:100%;background:#d4ac0d;color:#241d00;border:none;border-radius:8px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.5px;}' +
-        '#contact-modal .cm-submit:active{background:#b8940a;}' +
-        '#contact-modal .cm-success{display:none;text-align:center;padding:24px 0;color:#2e9e4f;font-size:15px;font-weight:600;}' +
-        '#contact-modal .cm-error{display:none;color:#e74c3c;font-size:12px;margin-top:8px;text-align:center;}';
+        '#contact-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10002;align-items:center;justify-content:center;}' +
+        '#contact-modal{position:relative;background:#0a0a0f;border-radius:14px;width:min(94vw,640px);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.8);}' +
+        '#contact-modal .cm-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;}' +
+        '#contact-modal .cm-title{color:#fff;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}' +
+        '#contact-modal .cm-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;line-height:1;padding:0;}' +
+        '#contact-modal .cm-close:hover{color:#fff;}' +
+        '#contact-modal .cm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.07);border-top:1px solid rgba(255,255,255,.07);}' +
+        '#contact-modal .cm-item{background:#0a0a0f;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 12px 24px;cursor:pointer;gap:14px;transition:background .15s;}' +
+        '#contact-modal .cm-item:hover{background:#14141f;}' +
+        '#contact-modal .cm-item svg{width:56px;height:56px;}' +
+        '#contact-modal .cm-item span{color:#fff;font-size:12px;text-align:center;line-height:1.4;font-weight:500;}' +
+        /* sub-form */
+        '#contact-modal .cm-form-view{padding:22px 24px 24px;display:none;}' +
+        '#contact-modal .cm-back{background:none;border:none;color:#d4ac0d;font-size:13px;cursor:pointer;padding:0 0 14px;display:flex;align-items:center;gap:5px;}' +
+        '#contact-modal .cm-form-title{color:#fff;font-size:15px;font-weight:700;margin-bottom:16px;}' +
+        '#contact-modal .cm-label{display:block;color:rgba(255,255,255,.55);font-size:12px;margin:10px 0 5px;}' +
+        '#contact-modal .cm-input,#contact-modal .cm-textarea{width:100%;background:#1a1a2a;border:1px solid rgba(255,255,255,.1);border-radius:8px;color:#fff;padding:11px 14px;font-size:14px;box-sizing:border-box;outline:none;font-family:inherit;}' +
+        '#contact-modal .cm-input:focus,#contact-modal .cm-textarea:focus{border-color:#d4ac0d;}' +
+        '#contact-modal .cm-textarea{resize:vertical;min-height:90px;}' +
+        '#contact-modal .cm-submit{margin-top:16px;width:100%;background:#d4ac0d;color:#1a1200;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.5px;}' +
+        '#contact-modal .cm-submit:disabled{opacity:.5;}' +
+        '#contact-modal .cm-success{text-align:center;padding:32px 0;color:#2ecc71;font-size:15px;font-weight:600;display:none;}' +
+        '#contact-modal .cm-err{color:#e74c3c;font-size:12px;margin-top:8px;text-align:center;display:none;}';
       document.head.appendChild(s);
     }
+
+    function icon(type) {
+      var icons = {
+        vip: '<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="22" r="14" stroke="#d4ac0d" stroke-width="3"/><path d="M32 8l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z" fill="#d4ac0d"/><path d="M14 42c0-3 8-5 18-5s18 2 18 5v6H14v-6z" fill="#d4ac0d" opacity=".3"/><rect x="20" y="48" width="24" height="4" rx="2" fill="#d4ac0d"/></svg>',
+        deposit: '<svg viewBox="0 0 64 64" fill="none"><rect x="8" y="12" width="34" height="42" rx="4" stroke="#d4ac0d" stroke-width="3"/><path d="M8 20h34" stroke="#d4ac0d" stroke-width="2"/><path d="M16 30h18M16 38h12" stroke="#d4ac0d" stroke-width="2.5" stroke-linecap="round"/><circle cx="50" cy="44" r="10" fill="#0a0a0f" stroke="#d4ac0d" stroke-width="2.5"/><path d="M50 40v8M46 44h8" stroke="#d4ac0d" stroke-width="2" stroke-linecap="round"/></svg>',
+        other: '<svg viewBox="0 0 64 64" fill="none"><rect x="10" y="8" width="30" height="38" rx="4" stroke="#d4ac0d" stroke-width="3"/><path d="M10 18h30" stroke="#d4ac0d" stroke-width="2"/><path d="M18 28h14M18 36h10" stroke="#d4ac0d" stroke-width="2.5" stroke-linecap="round"/><path d="M34 38l16 16" stroke="#d4ac0d" stroke-width="3" stroke-linecap="round"/><circle cx="48" cy="52" r="4" fill="#d4ac0d"/></svg>',
+        status: '<svg viewBox="0 0 64 64" fill="none"><circle cx="28" cy="28" r="17" stroke="#d4ac0d" stroke-width="3"/><path d="M40 40l14 14" stroke="#d4ac0d" stroke-width="3" stroke-linecap="round"/><path d="M20 28l6 6 10-10" stroke="#d4ac0d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        telegram: '<svg viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="26" fill="#229ED9"/><path d="M14 31l32-13-10 30-7-11-15-6z" fill="#fff" opacity=".3"/><path d="M14 31l32-13-10 30-7-11z" fill="#fff"/><path d="M28 42l3-8 7-6" stroke="#229ED9" stroke-width="2"/></svg>',
+        app: '<svg viewBox="0 0 64 64" fill="none"><path d="M32 10L52 50H12L32 10z" fill="#00C853" opacity=".9"/><path d="M32 10L52 50H32V10z" fill="#00C853"/><path d="M32 10L12 50H32V10z" fill="#4CAF50" opacity=".7"/><circle cx="32" cy="10" r="4" fill="#fff"/><rect x="22" y="46" width="20" height="6" rx="3" fill="#d4ac0d"/></svg>'
+      };
+      return icons[type] || '';
+    }
+
     var el = document.createElement('div');
     el.id = 'contact-popup';
     el.innerHTML =
-      '<div id="contact-modal-bg" style="position:absolute;inset:0;background:rgba(0,0,0,.58);"></div>' +
+      '<div id="contact-modal-bg" style="position:absolute;inset:0;background:rgba(0,0,0,.72);"></div>' +
       '<div id="contact-modal">' +
         '<div class="cm-header">' +
-          '<span class="cm-title">📩 Гомдол / Санал</span>' +
+          '<span class="cm-title">Contact Admin</span>' +
           '<button class="cm-close" id="contact-close-btn">✕</button>' +
         '</div>' +
-        '<div class="cm-body">' +
-          '<div id="cm-success" class="cm-success">✅ Таны мэдэгдэл амжилттай илгээгдлээ!</div>' +
-          '<div id="cm-form">' +
-            '<label>Нэрэглэгчийн нэр (заавал биш)</label>' +
-            '<input id="cm-name" type="text" placeholder="Нэр / хоч" autocomplete="off">' +
-            '<label>Төрөл</label>' +
-            '<select id="cm-kind">' +
-              '<option value="Гомдол">😤 Гомдол</option>' +
-              '<option value="Санал">💡 Санал</option>' +
-              '<option value="Асуулт">❓ Асуулт</option>' +
-              '<option value="Алдааны мэдэгдэл">🐛 Алдааны мэдэгдэл</option>' +
-            '</select>' +
-            '<label>Мэдэгдэл <span style="color:#e74c3c">*</span></label>' +
-            '<textarea id="cm-message" placeholder="Дэлгэрэнгүй бичнэ үү..."></textarea>' +
-            '<div id="cm-error" class="cm-error"></div>' +
+        '<div id="cm-grid-view">' +
+          '<div class="cm-grid">' +
+            '<div class="cm-item" data-kind="VIP эрх авах">' + icon('vip') + '<span>VIP эрх авах</span></div>' +
+            '<div class="cm-item" data-kind="Оороогүй цэнэгийн хүсэлт">' + icon('deposit') + '<span>Оороогүй цэнэгийн<br>хүсэлт гаргах</span></div>' +
+            '<div class="cm-item" data-kind="Бусад хүсэлт">' + icon('other') + '<span>Бусад хүсэлт<br>гаргах</span></div>' +
+            '<div class="cm-item" id="cm-status-btn">' + icon('status') + '<span>Хүсэлтийн хариу<br>шалгах</span></div>' +
+            '<div class="cm-item" id="cm-telegram-btn">' + icon('telegram') + '<span>Telegram чатанд<br>нэгдэх</span></div>' +
+            '<div class="cm-item" id="cm-app-btn">' + icon('app') + '<span>Апп татах</span></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="cm-form-view" id="cm-form-view">' +
+          '<button class="cm-back" id="cm-back-btn">← Буцах</button>' +
+          '<div class="cm-form-title" id="cm-form-title"></div>' +
+          '<div id="cm-success" class="cm-success">✅ Таны хүсэлт амжилттай илгээгдлээ!</div>' +
+          '<div id="cm-fields">' +
+            '<label class="cm-label">Нэрэглэгчийн нэр</label>' +
+            '<input id="cm-name" class="cm-input" type="text" placeholder="Нэр / хоч" autocomplete="off">' +
+            '<label class="cm-label">Мэдэгдэл <span style="color:#e74c3c">*</span></label>' +
+            '<textarea id="cm-message" class="cm-textarea" placeholder="Дэлгэрэнгүй бичнэ үү..."></textarea>' +
+            '<div id="cm-err" class="cm-err"></div>' +
             '<button class="cm-submit" id="cm-submit-btn">ИЛГЭЭХ</button>' +
           '</div>' +
         '</div>' +
@@ -61,10 +86,8 @@
   function showContact() {
     var p = document.getElementById('contact-popup');
     if (!p) return;
-    document.getElementById('cm-form').style.display = '';
-    document.getElementById('cm-success').style.display = 'none';
-    document.getElementById('cm-error').style.display = 'none';
-    document.getElementById('cm-message').value = '';
+    document.getElementById('cm-grid-view').style.display = '';
+    document.getElementById('cm-form-view').style.display = 'none';
     p.style.display = 'flex';
   }
 
@@ -2799,18 +2822,64 @@
     document.body.appendChild(buildContactPopup());
     document.getElementById('contact-close-btn').addEventListener('click', hideContact);
     document.getElementById('contact-modal-bg').addEventListener('click', hideContact);
+
+    /* Grid item clicks */
+    document.querySelectorAll('#cm-grid-view .cm-item[data-kind]').forEach(function (item) {
+      item.addEventListener('click', function () {
+        var kind = item.getAttribute('data-kind');
+        document.getElementById('cm-form-title').textContent = kind;
+        document.getElementById('cm-name').value = '';
+        document.getElementById('cm-message').value = '';
+        document.getElementById('cm-err').style.display = 'none';
+        document.getElementById('cm-success').style.display = 'none';
+        document.getElementById('cm-fields').style.display = '';
+        var btn = document.getElementById('cm-submit-btn');
+        btn.disabled = false; btn.textContent = 'ИЛГЭЭХ';
+        btn._kind = kind;
+        document.getElementById('cm-grid-view').style.display = 'none';
+        document.getElementById('cm-form-view').style.display = 'block';
+      });
+    });
+
+    document.getElementById('cm-status-btn').addEventListener('click', function () {
+      document.getElementById('cm-form-title').textContent = 'Хүсэлтийн хариу шалгах';
+      document.getElementById('cm-name').value = '';
+      document.getElementById('cm-message').value = '';
+      document.getElementById('cm-err').style.display = 'none';
+      document.getElementById('cm-success').style.display = 'none';
+      document.getElementById('cm-fields').style.display = '';
+      var btn = document.getElementById('cm-submit-btn');
+      btn.disabled = false; btn.textContent = 'ШАЛГАХ';
+      btn._kind = 'Хүсэлтийн хариу';
+      document.getElementById('cm-grid-view').style.display = 'none';
+      document.getElementById('cm-form-view').style.display = 'block';
+    });
+
+    document.getElementById('cm-telegram-btn').addEventListener('click', function () {
+      window.open('https://t.me/', '_blank');
+    });
+
+    document.getElementById('cm-app-btn').addEventListener('click', function () {
+      window.open('https://apps.apple.com/', '_blank');
+    });
+
+    document.getElementById('cm-back-btn').addEventListener('click', function () {
+      document.getElementById('cm-form-view').style.display = 'none';
+      document.getElementById('cm-grid-view').style.display = '';
+    });
+
     document.getElementById('cm-submit-btn').addEventListener('click', function () {
       var name    = document.getElementById('cm-name').value.trim();
-      var kind    = document.getElementById('cm-kind').value;
+      var kind    = this._kind || 'Хүсэлт';
       var message = document.getElementById('cm-message').value.trim();
-      var errEl   = document.getElementById('cm-error');
+      var errEl   = document.getElementById('cm-err');
       errEl.style.display = 'none';
       if (!message) {
         errEl.textContent = 'Мэдэгдэл бичнэ үү.';
         errEl.style.display = 'block';
         return;
       }
-      var btn = document.getElementById('cm-submit-btn');
+      var btn = this;
       btn.disabled = true;
       btn.textContent = 'Илгээж байна...';
       fetch('/api/contact', {
@@ -2819,7 +2888,7 @@
         body: JSON.stringify({ name: name, kind: kind, message: message })
       }).then(function (r) {
         if (r.ok) {
-          document.getElementById('cm-form').style.display = 'none';
+          document.getElementById('cm-fields').style.display = 'none';
           document.getElementById('cm-success').style.display = 'block';
         } else {
           errEl.textContent = 'Алдаа гарлаа. Дахин оролдоно уу.';
