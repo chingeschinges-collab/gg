@@ -124,9 +124,13 @@
 
 <div id="tab-contacts" class="tab-panel">
   <div class="contacts-wrap">
-    <div class="contacts-toolbar">
+    <div class="contacts-toolbar" style="flex-wrap:wrap;gap:8px">
       <button class="filter-btn active" data-filter="all">Бүгд</button>
       <button class="filter-btn" data-filter="unread">Уншаагүй</button>
+      <button class="filter-btn" data-filter="VIP эрх авах">👑 VIP</button>
+      <button class="filter-btn" data-filter="Оороогүй цэнэгийн хүсэлт">💳 Цэнэг</button>
+      <button class="filter-btn" data-filter="Бусад хүсэлт">📋 Бусад</button>
+      <button class="filter-btn" data-filter="Хүсэлтийн хариу">🔍 Хариу</button>
       <button class="btn blue" id="refresh-contacts-btn" style="margin-left:auto;padding:7px 16px;font-size:13px">↻ Шинэчлэх</button>
     </div>
     <div id="contacts-list"><div class="contacts-empty">Ачааллаж байна...</div></div>
@@ -286,17 +290,28 @@
   }
 
   function kindColor(kind) {
-    var map = { 'Гомдол': '#e74c3c', 'Санал': '#3498db', 'Асуулт': '#f39c12', 'Алдааны мэдэгдэл': '#9b59b6' };
+    var map = {
+      'VIP эрх авах': '#d4ac0d',
+      'Оороогүй цэнэгийн хүсэлт': '#e74c3c',
+      'Бусад хүсэлт': '#9b59b6',
+      'Хүсэлтийн хариу': '#27ae60',
+      'Гомдол': '#e74c3c', 'Санал': '#3498db', 'Асуулт': '#f39c12', 'Алдааны мэдэгдэл': '#9b59b6'
+    };
     return map[kind] || '#4db6e8';
   }
 
   function renderContacts() {
     var list = currentFilter === 'unread'
       ? allContacts.filter(function (c) { return !c.read; })
-      : allContacts;
+      : (currentFilter === 'all'
+        ? allContacts
+        : allContacts.filter(function (c) { return c.kind === currentFilter; }));
     var el = document.getElementById('contacts-list');
     if (!list.length) {
-      el.innerHTML = '<div class="contacts-empty">' + (currentFilter === 'unread' ? 'Уншаагүй мэдэгдэл алга.' : 'Мэдэгдэл алга.') + '</div>';
+      var msg = currentFilter === 'unread' ? 'Уншаагүй мэдэгдэл алга.'
+              : currentFilter === 'all' ? 'Мэдэгдэл алга.'
+              : '"' + currentFilter + '" ангиллын мэдэгдэл алга.';
+      el.innerHTML = '<div class="contacts-empty">' + msg + '</div>';
       return;
     }
     el.innerHTML = list.map(function (c) {
