@@ -2,6 +2,78 @@
   'use strict';
 
   /* ═══════════════════════════════════════
+     0. CONTACT POPUP — Гомдол / Саналууд
+  ═══════════════════════════════════════ */
+  function buildContactPopup() {
+    if (!document.getElementById('contact-css')) {
+      var s = document.createElement('style');
+      s.id = 'contact-css';
+      s.textContent =
+        '#contact-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;align-items:center;justify-content:center;}' +
+        '#contact-modal{position:relative;background:#232334;border-radius:12px;width:min(92vw,420px);padding:0;overflow:hidden;}' +
+        '#contact-modal .cm-header{background:#1a1a2e;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}' +
+        '#contact-modal .cm-title{color:#d4ac0d;font-size:16px;font-weight:700;letter-spacing:.5px;}' +
+        '#contact-modal .cm-close{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;opacity:.7;padding:0 4px;}' +
+        '#contact-modal .cm-close:hover{opacity:1;}' +
+        '#contact-modal .cm-body{padding:18px 20px 20px;}' +
+        '#contact-modal label{display:block;color:rgba(255,255,255,.65);font-size:12px;margin:12px 0 5px;}' +
+        '#contact-modal input,#contact-modal select,#contact-modal textarea{width:100%;background:#2b2d42;border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#fff;padding:10px 13px;font-size:14px;box-sizing:border-box;outline:none;font-family:inherit;}' +
+        '#contact-modal input:focus,#contact-modal select:focus,#contact-modal textarea:focus{border-color:#d4ac0d;}' +
+        '#contact-modal textarea{resize:vertical;min-height:100px;}' +
+        '#contact-modal select{appearance:none;cursor:pointer;}' +
+        '#contact-modal .cm-submit{margin-top:16px;width:100%;background:#d4ac0d;color:#241d00;border:none;border-radius:8px;padding:12px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.5px;}' +
+        '#contact-modal .cm-submit:active{background:#b8940a;}' +
+        '#contact-modal .cm-success{display:none;text-align:center;padding:24px 0;color:#2e9e4f;font-size:15px;font-weight:600;}' +
+        '#contact-modal .cm-error{display:none;color:#e74c3c;font-size:12px;margin-top:8px;text-align:center;}';
+      document.head.appendChild(s);
+    }
+    var el = document.createElement('div');
+    el.id = 'contact-popup';
+    el.innerHTML =
+      '<div id="contact-modal-bg" style="position:absolute;inset:0;background:rgba(0,0,0,.58);"></div>' +
+      '<div id="contact-modal">' +
+        '<div class="cm-header">' +
+          '<span class="cm-title">📩 Гомдол / Санал</span>' +
+          '<button class="cm-close" id="contact-close-btn">✕</button>' +
+        '</div>' +
+        '<div class="cm-body">' +
+          '<div id="cm-success" class="cm-success">✅ Таны мэдэгдэл амжилттай илгээгдлээ!</div>' +
+          '<div id="cm-form">' +
+            '<label>Нэрэглэгчийн нэр (заавал биш)</label>' +
+            '<input id="cm-name" type="text" placeholder="Нэр / хоч" autocomplete="off">' +
+            '<label>Төрөл</label>' +
+            '<select id="cm-kind">' +
+              '<option value="Гомдол">😤 Гомдол</option>' +
+              '<option value="Санал">💡 Санал</option>' +
+              '<option value="Асуулт">❓ Асуулт</option>' +
+              '<option value="Алдааны мэдэгдэл">🐛 Алдааны мэдэгдэл</option>' +
+            '</select>' +
+            '<label>Мэдэгдэл <span style="color:#e74c3c">*</span></label>' +
+            '<textarea id="cm-message" placeholder="Дэлгэрэнгүй бичнэ үү..."></textarea>' +
+            '<div id="cm-error" class="cm-error"></div>' +
+            '<button class="cm-submit" id="cm-submit-btn">ИЛГЭЭХ</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    return el;
+  }
+
+  function showContact() {
+    var p = document.getElementById('contact-popup');
+    if (!p) return;
+    document.getElementById('cm-form').style.display = '';
+    document.getElementById('cm-success').style.display = 'none';
+    document.getElementById('cm-error').style.display = 'none';
+    document.getElementById('cm-message').value = '';
+    p.style.display = 'flex';
+  }
+
+  function hideContact() {
+    var p = document.getElementById('contact-popup');
+    if (p) p.style.display = 'none';
+  }
+
+  /* ═══════════════════════════════════════
      1. LOGIN POPUP  — loginui.html-н HTML
   ═══════════════════════════════════════ */
   function buildLoginPopup() {
@@ -2141,6 +2213,18 @@
                 '</div>',
               '</div>',
 
+              '<div id="sidebar-contact-btn"',
+              '     class="panel button SimpleButton SimpleButton_v_text SimpleButton_c_light',
+              '            SimpleButton_use_text_use_icon LobbySidebarContainer__action SimpleButton_interactive"',
+              '     tabindex="-1">',
+                '<div class="SimpleButton__content">',
+                  '<div class="panel Icon Icon_v_default Icon_c_white Icon_val_support SimpleButton__icon LobbySidebarContainer__action__icon" tabindex="-1">',
+                    '<div class="Icon__content"></div>',
+                  '</div>',
+                  '<div class="SimpleButton__text">Холбоо барих</div>',
+                '</div>',
+              '</div>',
+
             '</div>',
           '</div>',
         '</div>',
@@ -2706,12 +2790,55 @@
       document.getElementById('sidebar-settings-btn').addEventListener('click', function () {
         closeSidebar(showSettings);
       });
+      document.getElementById('sidebar-contact-btn').addEventListener('click', function () {
+        closeSidebar(showContact);
+      });
     }
+
+    /* ── Contact popup ── */
+    document.body.appendChild(buildContactPopup());
+    document.getElementById('contact-close-btn').addEventListener('click', hideContact);
+    document.getElementById('contact-modal-bg').addEventListener('click', hideContact);
+    document.getElementById('cm-submit-btn').addEventListener('click', function () {
+      var name    = document.getElementById('cm-name').value.trim();
+      var kind    = document.getElementById('cm-kind').value;
+      var message = document.getElementById('cm-message').value.trim();
+      var errEl   = document.getElementById('cm-error');
+      errEl.style.display = 'none';
+      if (!message) {
+        errEl.textContent = 'Мэдэгдэл бичнэ үү.';
+        errEl.style.display = 'block';
+        return;
+      }
+      var btn = document.getElementById('cm-submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Илгээж байна...';
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, kind: kind, message: message })
+      }).then(function (r) {
+        if (r.ok) {
+          document.getElementById('cm-form').style.display = 'none';
+          document.getElementById('cm-success').style.display = 'block';
+        } else {
+          errEl.textContent = 'Алдаа гарлаа. Дахин оролдоно уу.';
+          errEl.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'ИЛГЭЭХ';
+        }
+      }).catch(function () {
+        errEl.textContent = 'Холболт тасарлаа.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'ИЛГЭЭХ';
+      });
+    });
 
     /* ESC */
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') {
-        hideLogin(); hideRegister(); hideSettings(); closeSidebar();
+        hideLogin(); hideRegister(); hideSettings(); closeSidebar(); hideContact();
       }
     });
 
@@ -3341,6 +3468,8 @@
   window.hideRegister = hideRegister;
   window.showSettings = showSettings;
   window.hideSettings = hideSettings;
+  window.showContact  = showContact;
+  window.hideContact  = hideContact;
   window.openSidebar  = openSidebar;
   window.closeSidebar = closeSidebar;
   window.openTable    = openTable;
