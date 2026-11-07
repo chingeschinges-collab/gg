@@ -3087,9 +3087,13 @@
 
     /* Нэвтэрсэн эсэхийг шалгах — public (нэвтрээгүй) үед login, private (нэвтэрсэн) үед данс */
     function isLoggedIn() {
+      /* Нэвтэрсний дараа зохиомлоор үүсгэдэг avatar — хамгийн найдвартай шинж */
+      if (document.querySelector('[data-custom-avatar]')) return true;
+      /* Login товч display:none болгогдсон ч DOM-д үлддэг тул computed style шалгана */
+      var loginBtnEl = document.querySelector('.MiniUserInfo__login_button');
+      if (loginBtnEl && window.getComputedStyle(loginBtnEl).display !== 'none') return false;
       var userBlock = document.querySelector('.user_info_block');
       if (userBlock && userBlock.classList.contains('notClientLogin')) return false;
-      if (document.querySelector('.MiniUserInfo__login_button')) return false;
       return true;
     }
 
