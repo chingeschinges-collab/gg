@@ -2773,13 +2773,8 @@
           '<div style="width:100%;height:100%;border-radius:4px;overflow:hidden;">' +
             '<img src="' + avUrl + '" style="width:100%;height:100%;object-fit:cover;" ' +
             'onerror="this.style.display=\'none\'">' +
-          '</div>' +
-          /* Монгол туг — доод талд, дунд нь */
-          '<div style="position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);' +
-          'width:1.6em;height:1.1em;overflow:hidden;border:1.5px solid #222;border-radius:2px;">' +
-            '<div class="panel Icon Icon_v_default Icon_c_white Icon_val_flag_icon_mn" tabindex="-1"' +
-            ' style="width:100%;height:100%;"></div>' +
           '</div>';
+        /* Монгол туг нь .MiniUserInfo__avatar::after pseudo-элементээр автоматаар нэмэгдэнэ */
         miniUser.appendChild(avatarDiv);
 
         /* ── Нэр + ранк (зүүн/дунд) ── */
