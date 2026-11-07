@@ -2169,42 +2169,53 @@
       s.id = 'cashier-css';
       s.textContent = [
         '#cashier-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10002;align-items:center;justify-content:center;}',
-        '#cashier-modal{position:relative;background:#181c24;border-radius:12px;width:min(96vw,760px);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.9);}',
+        '#cashier-modal{position:relative;background:#1b1f27;border-radius:10px;width:min(96vw,780px);max-height:92vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.9);font-family:Georgia,"Times New Roman",serif;}',
         /* header */
-        '#cashier-modal .ch-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.08);}',
-        '#cashier-modal .ch-hdr-title{color:#fff;font-size:16px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}',
-        '#cashier-modal .ch-close{background:none;border:none;color:rgba(255,255,255,.45);font-size:24px;cursor:pointer;line-height:1;padding:0 2px;}',
+        '#cashier-modal .ch-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 26px;}',
+        '#cashier-modal .ch-hdr-title{color:#fff;font-size:20px;font-weight:700;letter-spacing:1px;}',
+        '#cashier-modal .ch-close{background:none;border:none;color:rgba(255,255,255,.45);font-size:26px;cursor:pointer;line-height:1;padding:0 2px;font-family:Arial,sans-serif;}',
         '#cashier-modal .ch-close:hover{color:#fff;}',
         /* tabs */
-        '#cashier-modal .ch-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.08);background:#12151c;overflow-x:auto;scrollbar-width:none;}',
+        '#cashier-modal .ch-tabs{display:flex;background:#14171d;overflow-x:auto;scrollbar-width:none;font-family:Arial,sans-serif;padding:0 6px;}',
         '#cashier-modal .ch-tabs::-webkit-scrollbar{display:none}',
-        '#cashier-modal .ch-tab{flex:0 0 auto;padding:12px 18px;font-size:13px;font-weight:600;color:rgba(255,255,255,.45);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;background:none;border-top:none;border-left:none;border-right:none;}',
-        '#cashier-modal .ch-tab.active{color:#d4ac0d;border-bottom-color:#d4ac0d;background:rgba(212,172,13,.06);}',
-        '#cashier-modal .ch-tab:hover:not(.active){color:rgba(255,255,255,.75);}',
+        '#cashier-modal .ch-tab{flex:0 0 auto;padding:12px 16px;font-size:12px;font-weight:700;letter-spacing:.3px;color:rgba(255,255,255,.45);cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;background:none;border:none;margin:0 1px;border-radius:6px 6px 0 0;}',
+        '#cashier-modal .ch-tab.active{color:#1a1200;background:linear-gradient(135deg,#f3cf52,#d4ac0d 60%,#caa10a);box-shadow:0 -2px 8px rgba(212,172,13,.4);}',
+        '#cashier-modal .ch-tab:hover:not(.active){color:rgba(255,255,255,.8);}',
         /* body */
-        '#cashier-modal .ch-body{padding:20px 24px;overflow-y:auto;flex:1;}',
+        '#cashier-modal .ch-body{padding:22px 26px 0;overflow-y:auto;flex:1;font-family:Arial,sans-serif;}',
         /* accounts tab */
-        '#cashier-modal .ch-subtitle{font-size:16px;font-weight:700;color:#fff;margin-bottom:8px;}',
-        '#cashier-modal .ch-info{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:18px;display:flex;align-items:center;gap:8px;}',
-        '#cashier-modal .ch-acc-card{background:#0d1117;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px 20px;margin-bottom:12px;}',
-        '#cashier-modal .ch-acc-card:last-of-type{margin-bottom:0;}',
-        '#cashier-modal .ch-acc-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;}',
-        '#cashier-modal .ch-acc-bank{font-size:13px;font-weight:600;color:rgba(255,255,255,.75);}',
-        '#cashier-modal .ch-acc-holder{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:8px;}',
-        '#cashier-modal .ch-acc-holder b{color:#d4ac0d;}',
-        '#cashier-modal .ch-acc-row{display:flex;align-items:center;gap:12px;}',
-        '#cashier-modal .ch-acc-num{font-size:26px;font-weight:700;letter-spacing:2px;color:#fff;flex:1;}',
-        '#cashier-modal .ch-acc-num.iban{color:#2ecc71;font-size:20px;}',
-        '#cashier-modal .ch-copy-btn{background:#d4ac0d;color:#1a1200;border:none;border-radius:6px;font-size:13px;font-weight:700;padding:7px 18px;cursor:pointer;white-space:nowrap;flex-shrink:0;}',
+        '#cashier-modal .ch-subtitle{font-size:19px;font-weight:700;color:#fff;margin-bottom:12px;font-family:Georgia,serif;}',
+        '#cashier-modal .ch-info-bar{display:flex;align-items:center;gap:14px;background:#2a2410;border:1px solid rgba(212,172,13,.4);border-radius:8px;padding:10px 16px;margin-bottom:18px;flex-wrap:wrap;}',
+        '#cashier-modal .ch-info-bar span{color:#e7c668;font-size:13px;font-weight:600;}',
+        '#cashier-modal .ch-info-icons{display:flex;gap:8px;margin-left:auto;}',
+        '#cashier-modal .ci{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}',
+        '#cashier-modal .ch-acc-wrap{background:linear-gradient(180deg,#0e1f16,#0a1510);border:1px solid rgba(46,204,113,.25);border-radius:10px;overflow:hidden;margin-bottom:18px;}',
+        '#cashier-modal .ch-acc-item{padding:18px 20px;border-bottom:1px solid rgba(46,204,113,.15);}',
+        '#cashier-modal .ch-acc-item:last-child{border-bottom:none;}',
+        '#cashier-modal .ch-acc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}',
+        '#cashier-modal .ch-acc-badge{width:20px;height:20px;border-radius:4px;background:#2ecc71;color:#06220f;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}',
+        '#cashier-modal .ch-acc-bank{font-size:13px;font-weight:700;color:rgba(255,255,255,.8);}',
+        '#cashier-modal .ch-acc-holder{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:10px;}',
+        '#cashier-modal .ch-acc-holder b{color:#fff;letter-spacing:.5px;}',
+        '#cashier-modal .ch-acc-row{display:flex;align-items:center;gap:14px;}',
+        '#cashier-modal .ch-acc-num{font-size:28px;font-weight:700;letter-spacing:1.5px;color:#fff;flex:1;font-family:Arial,sans-serif;}',
+        '#cashier-modal .ch-acc-num.iban{color:#2ecc71;font-size:22px;}',
+        '#cashier-modal .ch-copy-btn{background:#d4ac0d;color:#1a1200;border:none;border-radius:6px;font-size:13px;font-weight:700;padding:7px 20px;cursor:pointer;white-space:nowrap;flex-shrink:0;}',
         '#cashier-modal .ch-copy-btn:active{background:#b8940a;}',
         '#cashier-modal .ch-copy-btn.copied{background:#2ecc71;color:#fff;}',
-        '#cashier-modal .ch-warning{display:flex;gap:10px;background:rgba(0,0,0,.3);border-radius:8px;padding:14px 16px;margin-top:16px;font-size:13px;color:rgba(255,255,255,.65);line-height:1.6;}',
-        '#cashier-modal .ch-warning .dot{color:#e74c3c;font-size:16px;flex-shrink:0;margin-top:1px;}',
-        '#cashier-modal .ch-report-btn{display:block;width:100%;margin-top:14px;background:#3498db;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;}',
+        '#cashier-modal .ch-acc-note{font-size:12px;color:rgba(255,255,255,.3);margin-top:8px;}',
+        '#cashier-modal .ch-warning{display:flex;gap:10px;font-size:13px;color:rgba(255,255,255,.7);line-height:1.6;margin-bottom:16px;}',
+        '#cashier-modal .ch-warning .dot{color:#e74c3c;font-size:14px;flex-shrink:0;margin-top:3px;}',
+        '#cashier-modal .ch-warning b{color:#d4ac0d;font-weight:700;}',
+        '#cashier-modal .ch-report-btn{display:block;width:100%;background:#3498db;color:#fff;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;margin-bottom:20px;}',
         '#cashier-modal .ch-report-btn:hover{background:#2980b9;}',
+        /* footer */
+        '#cashier-modal .ch-footer{padding:16px 26px 22px;font-family:Arial,sans-serif;}',
+        '#cashier-modal .ch-close-full{display:block;width:100%;background:#454c59;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;letter-spacing:.5px;}',
+        '#cashier-modal .ch-close-full:hover{background:#525a69;}',
         /* other tabs */
-        '#cashier-modal .ch-soon{text-align:center;padding:48px 0;color:rgba(255,255,255,.3);font-size:14px;}',
-        '#cashier-modal .ch-empty{color:rgba(255,255,255,.3);text-align:center;padding:36px 0;font-size:14px;}',
+        '#cashier-modal .ch-soon{text-align:center;padding:48px 0;color:rgba(255,255,255,.3);font-size:14px;font-family:Arial,sans-serif;}',
+        '#cashier-modal .ch-empty{color:rgba(255,255,255,.3);text-align:center;padding:36px 0;font-size:14px;font-family:Arial,sans-serif;}',
       ].join('');
       document.head.appendChild(s);
     }
@@ -2213,11 +2224,17 @@
       { id: 'dans',     label: '⊟ ДАНС' },
       { id: 'deposit',  label: '⊕ DEPOSIT' },
       { id: 'status',   label: 'ⓘ STATUS' },
-      { id: 'cashout',  label: '⊖ CASH OUT' },
-      { id: 'transfer', label: '⇄ TRANSFER' },
-      { id: 'exchange', label: '⇆ EXCHANGE' },
+      { id: 'cashout',  label: '⊡ CASH OUT' },
+      { id: 'transfer', label: '⇅ TRANSFER' },
+      { id: 'exchange', label: '⇄ EXCHANGE' },
       { id: 'history',  label: '⟳ HISTORY' },
     ];
+
+    var ICON_COLORS = ['#2e7d32', '#6a1b9a', '#00838f', '#c62828', '#00695c', '#558b2f', '#37474f'];
+    var ICON_LETTERS = ['₮', 'G', '₿', 'X', 'M', 'U', '▲'];
+    var infoIcons = ICON_LETTERS.map(function (letter, i) {
+      return '<span class="ci" style="background:' + ICON_COLORS[i % ICON_COLORS.length] + '">' + letter + '</span>';
+    }).join('');
 
     var el = document.createElement('div');
     el.id = 'cashier-popup';
@@ -2236,11 +2253,14 @@
         '<div class="ch-body">' +
           '<div id="ch-panel-dans">' +
             '<div class="ch-subtitle">Шилжүүлэх данс:</div>' +
-            '<div class="ch-info">Та аль ч банкнаас цэнэглэлт хийж болно.</div>' +
+            '<div class="ch-info-bar">' +
+              '<span>Та аль ч банкнаас цэнэглэлт хийж болно.</span>' +
+              '<div class="ch-info-icons">' + infoIcons + '</div>' +
+            '</div>' +
             '<div id="cashier-accounts"><div class="ch-empty">Ачааллаж байна...</div></div>' +
             '<div class="ch-warning">' +
               '<span class="dot">●</span>' +
-              '<span>Та шилжүүлэг хийхдээ гүйлгээний утган дээрээ өөрийн <b style="color:#d4ac0d">Тоглогчийн нэрийг</b> сайтар шалгаж, үнэн зөв оруулна уу. Хэрэв 5 минутын дотор ороогүй бол манай үйлчилгээний албанд баримтаа хавсарган, хандана уу!!</span>' +
+              '<span>Та шилжүүлэг хийхдээ гүйлгээний утган дээрээ өөрийн <b>Тоглогчийн нэрийг</b> сайтар шалгаж, үнэн зөв оруулна уу. Хэрэв <b>5 минутын дотор ороогүй бол</b> манай үйлчилгээний албанд баримтаа хавсарган, хандана уу!!</span>' +
             '</div>' +
             '<button class="ch-report-btn" id="cashier-report-btn">Цэнэг ороогүй бол энд дарна уу!</button>' +
           '</div>' +
@@ -2250,6 +2270,9 @@
           '<div id="ch-panel-transfer" style="display:none"><div class="ch-soon">Тун удахгүй...</div></div>' +
           '<div id="ch-panel-exchange" style="display:none"><div class="ch-soon">Тун удахгүй...</div></div>' +
           '<div id="ch-panel-history" style="display:none"><div class="ch-soon">Тун удахгүй...</div></div>' +
+        '</div>' +
+        '<div class="ch-footer">' +
+          '<button class="ch-close-full" id="cashier-close-btn-2">CLOSE</button>' +
         '</div>' +
       '</div>';
     return el;
@@ -2264,11 +2287,12 @@
           el.innerHTML = '<div class="ch-empty">Данс байхгүй байна. Дараа шалгана уу.</div>';
           return;
         }
-        el.innerHTML = list.map(function (a) {
+        el.innerHTML = '<div class="ch-acc-wrap">' + list.map(function (a) {
           var isIban = /^[A-Z]{2}\d/.test(a.number);
-          return '<div class="ch-acc-card">' +
+          var badge = (a.bank || '?').trim().charAt(0).toUpperCase();
+          return '<div class="ch-acc-item">' +
             '<div class="ch-acc-top">' +
-              '<span style="font-size:18px">🏦</span>' +
+              '<span class="ch-acc-badge">' + badge + '</span>' +
               '<span class="ch-acc-bank">' + a.bank + '</span>' +
             '</div>' +
             (a.holder ? '<div class="ch-acc-holder">Данс эзэмшигч: <b>' + a.holder + '</b></div>' : '') +
@@ -2276,9 +2300,9 @@
               '<div class="ch-acc-num' + (isIban ? ' iban' : '') + '">' + a.number + '</div>' +
               '<button class="ch-copy-btn" data-num="' + a.number + '">Copy</button>' +
             '</div>' +
-            (a.note ? '<div style="font-size:12px;color:rgba(255,255,255,.3);margin-top:6px;">' + a.note + '</div>' : '') +
+            (a.note ? '<div class="ch-acc-note">' + a.note + '</div>' : '') +
           '</div>';
-        }).join('');
+        }).join('') + '</div>';
         el.querySelectorAll('.ch-copy-btn').forEach(function (btn) {
           btn.addEventListener('click', function () {
             var num = btn.getAttribute('data-num');
@@ -3064,6 +3088,7 @@
     /* ── КАСС товч ── */
     document.body.appendChild(buildCashierPopup());
     document.getElementById('cashier-close-btn').addEventListener('click', hideCashier);
+    document.getElementById('cashier-close-btn-2').addEventListener('click', hideCashier);
     document.getElementById('cashier-bg').addEventListener('click', hideCashier);
 
     /* Cashier tab switching */
