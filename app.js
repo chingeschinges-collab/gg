@@ -3011,8 +3011,19 @@
     document.getElementById('cashier-close-btn').addEventListener('click', hideCashier);
     document.getElementById('cashier-bg').addEventListener('click', hideCashier);
 
-    var cashierBtn = document.querySelector('.CashierButton');
-    if (cashierBtn) cashierBtn.addEventListener('click', showCashier);
+    /* Use capture+stopImmediatePropagation to block platform's own cashier dialog */
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      while (t && t !== document) {
+        if (t.classList && t.classList.contains('CashierButton')) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          showCashier();
+          return;
+        }
+        t = t.parentNode;
+      }
+    }, true);
 
     /* ── Burger menu ── */
     var menuBtn = document.querySelector('.menu_button');
