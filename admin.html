@@ -77,6 +77,28 @@
   .contacts-toolbar{display:flex;gap:10px;margin-bottom:16px;align-items:center}
   .filter-btn{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:7px;padding:6px 14px;font-size:13px;cursor:pointer}
   .filter-btn.active{border-color:var(--gold);color:var(--gold)}
+
+  /* Accounts (Данс) */
+  .acc-wrap{max-width:720px;margin:22px auto;padding:0 18px}
+  .acc-form{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:20px}
+  .acc-form h2{font-size:14px;margin:0 0 14px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .bank-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+  @media(max-width:480px){.bank-picker{grid-template-columns:repeat(3,1fr)}}
+  .bank-opt{background:var(--panel2);border:2px solid var(--line);border-radius:8px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;text-align:center}
+  .bank-opt img{width:32px;height:32px;border-radius:7px;object-fit:cover}
+  .bank-opt span{font-size:11px;color:var(--muted);line-height:1.2}
+  .bank-opt.selected{border-color:var(--gold);background:#33382a}
+  .bank-opt.selected span{color:var(--gold)}
+  .acc-list{display:flex;flex-direction:column;gap:12px}
+  .acc-card{background:linear-gradient(180deg,#152018,#101810);border:1px solid rgba(46,204,113,.25);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+  .acc-card img{width:30px;height:30px;border-radius:6px;flex-shrink:0}
+  .acc-card .ac-info{flex:1;min-width:0}
+  .ac-info .ac-bank{font-size:12px;font-weight:700;color:rgba(255,255,255,.75)}
+  .ac-info .ac-num{font-size:17px;font-weight:700;color:#fff;letter-spacing:.5px;word-break:break-all}
+  .ac-info .ac-holder{font-size:12px;color:var(--muted)}
+  .acc-card .ac-del{background:transparent;border:1px solid var(--line);color:var(--red);border-radius:6px;font-size:12px;padding:5px 10px;cursor:pointer;flex-shrink:0}
+  .acc-card .ac-del:hover{border-color:var(--red);background:rgba(192,57,43,.1)}
+  .acc-empty{color:var(--muted);text-align:center;padding:30px 0;font-size:13px}
 </style>
 </head>
 <body>
@@ -86,6 +108,7 @@
 
 <div class="tabs">
   <button class="tab-btn active" data-tab="tables">Ширээ</button>
+  <button class="tab-btn" data-tab="accounts">💳 Данс</button>
   <button class="tab-btn" data-tab="contacts">Гомдол / Санал <span class="badge" id="unread-badge" style="display:none">0</span></button>
 </div>
 
@@ -121,6 +144,26 @@
   </div>
 </div>
 </div><!-- /tab-tables -->
+
+<div id="tab-accounts" class="tab-panel">
+  <div class="acc-wrap">
+    <div class="acc-form">
+      <h2>Шинэ данс нэмэх</h2>
+      <label>Банк сонгох</label>
+      <div class="bank-picker" id="bank-picker"></div>
+      <label>Дансны дугаар</label>
+      <input id="acc-number" placeholder="ж: 8734159954 эсвэл MN130039..." autocomplete="off">
+      <label>Данс эзэмшигч</label>
+      <input id="acc-holder" placeholder="Овог нэр" autocomplete="off">
+      <label>Тэмдэглэл (заавал биш)</label>
+      <input id="acc-note" placeholder="ж: Голлох данс" autocomplete="off">
+      <div class="row-actions">
+        <button class="btn save" id="acc-add-btn">+ Данс нэмэх</button>
+      </div>
+    </div>
+    <div id="acc-list"><div class="acc-empty">Ачааллаж байна...</div></div>
+  </div>
+</div>
 
 <div id="tab-contacts" class="tab-panel">
   <div class="contacts-wrap">
@@ -271,6 +314,114 @@
       document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
       document.getElementById('tab-' + target).classList.add('active');
       if (target === 'contacts') loadContacts();
+      if (target === 'accounts') loadAccounts();
+    });
+  });
+})();
+
+/* ── Accounts (Данс) ── */
+(function () {
+  var BANKS = [
+    { name: 'Голомт банк', logo: 'assets/banks/golomt.jpg' },
+    { name: 'Хас банк',    logo: 'assets/banks/xac.jpg' },
+    { name: 'Хаан банк',   logo: 'assets/banks/khan.jpg' },
+    { name: 'Богд банк',   logo: 'assets/banks/bogd.jpg' },
+    { name: 'М банк',      logo: 'assets/banks/mbank.png' },
+    { name: 'ХХБ (TDB)',   logo: 'assets/banks/tdb.jpg' },
+    { name: 'Төрийн банк', logo: 'assets/banks/state.jpg' },
+  ];
+  var selectedBank = BANKS[0].name;
+
+  function getAdminKey() {
+    var k = sessionStorage.getItem('admin_key');
+    if (!k) { k = prompt('Admin түлхүүр оруулна уу:') || ''; if (k) sessionStorage.setItem('admin_key', k); }
+    return k;
+  }
+  function toast(msg, ok) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = ok === false ? '#c0392b' : '#2e9e4f';
+    t.classList.add('show');
+    setTimeout(function () { t.classList.remove('show'); }, 1800);
+  }
+  function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function logoForBank(name) {
+    for (var i = 0; i < BANKS.length; i++) if (BANKS[i].name === name) return BANKS[i].logo;
+    return null;
+  }
+
+  var pickerEl = document.getElementById('bank-picker');
+  pickerEl.innerHTML = BANKS.map(function (b, i) {
+    return '<div class="bank-opt' + (i === 0 ? ' selected' : '') + '" data-bank="' + escHtml(b.name) + '">' +
+      '<img src="' + b.logo + '" alt="">' +
+      '<span>' + b.name + '</span>' +
+    '</div>';
+  }).join('');
+  pickerEl.querySelectorAll('.bank-opt').forEach(function (opt) {
+    opt.addEventListener('click', function () {
+      pickerEl.querySelectorAll('.bank-opt').forEach(function (o) { o.classList.remove('selected'); });
+      opt.classList.add('selected');
+      selectedBank = opt.getAttribute('data-bank');
+    });
+  });
+
+  function renderAccounts(list) {
+    var el = document.getElementById('acc-list');
+    if (!list || !list.length) { el.innerHTML = '<div class="acc-empty">Данс байхгүй байна.</div>'; return; }
+    el.innerHTML = '<div class="acc-list">' + list.map(function (a) {
+      var logo = logoForBank(a.bank);
+      return '<div class="acc-card">' +
+        (logo ? '<img src="' + logo + '" alt="">' : '') +
+        '<div class="ac-info">' +
+          '<div class="ac-bank">' + escHtml(a.bank) + '</div>' +
+          '<div class="ac-num">' + escHtml(a.number) + '</div>' +
+          (a.holder ? '<div class="ac-holder">👤 ' + escHtml(a.holder) + '</div>' : '') +
+        '</div>' +
+        '<button class="ac-del" data-id="' + a.id + '">🗑</button>' +
+      '</div>';
+    }).join('') + '</div>';
+    el.querySelectorAll('.ac-del').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (!confirm('Энэ дансыг устгах уу?')) return;
+        deleteAccount(+btn.getAttribute('data-id'));
+      });
+    });
+  }
+
+  function loadAccounts() {
+    var key = getAdminKey();
+    fetch('/api/accounts?key=' + encodeURIComponent(key))
+      .then(function (r) { return r.json(); })
+      .then(renderAccounts)
+      .catch(function () { document.getElementById('acc-list').innerHTML = '<div class="acc-empty" style="color:var(--red)">Серверт холбогдсонгүй.</div>'; });
+  }
+
+  function deleteAccount(id) {
+    var key = getAdminKey();
+    fetch('/api/accounts?key=' + encodeURIComponent(key), {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: id })
+    }).then(loadAccounts);
+  }
+
+  document.getElementById('acc-add-btn').addEventListener('click', function () {
+    var number = document.getElementById('acc-number').value.trim();
+    var holder = document.getElementById('acc-holder').value.trim();
+    var note   = document.getElementById('acc-note').value.trim();
+    if (!number) { toast('Дансны дугаар оруулна уу', false); return; }
+    var key = getAdminKey();
+    fetch('/api/accounts?key=' + encodeURIComponent(key), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bank: selectedBank, number: number, holder: holder, note: note })
+    }).then(function (r) {
+      if (!r.ok) { toast('Алдаа гарлаа', false); return; }
+      document.getElementById('acc-number').value = '';
+      document.getElementById('acc-holder').value = '';
+      document.getElementById('acc-note').value = '';
+      loadAccounts();
+      toast('Данс нэмэгдлээ');
     });
   });
 })();
