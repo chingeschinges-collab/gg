@@ -2182,18 +2182,20 @@
         '#cashier-modal .ch-tab.active{color:#1a1200;background:linear-gradient(135deg,#f3cf52,#d4ac0d 60%,#caa10a);box-shadow:0 -2px 8px rgba(212,172,13,.4);}',
         '#cashier-modal .ch-tab:hover:not(.active){color:rgba(255,255,255,.8);}',
         /* body */
-        '#cashier-modal .ch-body{padding:22px 26px 0;overflow-y:auto;flex:1;font-family:Arial,sans-serif;}',
+        '#cashier-modal .ch-body{padding:22px 26px 0;overflow-y:auto;flex:1;font-family:Arial,sans-serif;min-height:420px;}',
         /* accounts tab */
         '#cashier-modal .ch-subtitle{font-size:19px;font-weight:700;color:#fff;margin-bottom:12px;font-family:Georgia,serif;}',
         '#cashier-modal .ch-info-bar{display:flex;align-items:center;gap:14px;background:#2a2410;border:1px solid rgba(212,172,13,.4);border-radius:8px;padding:10px 16px;margin-bottom:18px;flex-wrap:wrap;}',
         '#cashier-modal .ch-info-bar span{color:#e7c668;font-size:13px;font-weight:600;}',
         '#cashier-modal .ch-info-icons{display:flex;gap:8px;margin-left:auto;}',
-        '#cashier-modal .ci{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;}',
+        '#cashier-modal .ci{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden;background:#222;}',
+        '#cashier-modal .ci img{width:100%;height:100%;object-fit:cover;}',
         '#cashier-modal .ch-acc-wrap{background:linear-gradient(180deg,#0e1f16,#0a1510);border:1px solid rgba(46,204,113,.25);border-radius:10px;overflow:hidden;margin-bottom:18px;}',
         '#cashier-modal .ch-acc-item{padding:18px 20px;border-bottom:1px solid rgba(46,204,113,.15);}',
         '#cashier-modal .ch-acc-item:last-child{border-bottom:none;}',
         '#cashier-modal .ch-acc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}',
-        '#cashier-modal .ch-acc-badge{width:20px;height:20px;border-radius:4px;background:#2ecc71;color:#06220f;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}',
+        '#cashier-modal .ch-acc-badge{width:22px;height:22px;border-radius:5px;background:#2ecc71;color:#06220f;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}',
+        '#cashier-modal .ch-acc-badge img{width:100%;height:100%;object-fit:cover;}',
         '#cashier-modal .ch-acc-bank{font-size:13px;font-weight:700;color:rgba(255,255,255,.8);}',
         '#cashier-modal .ch-acc-holder{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:10px;}',
         '#cashier-modal .ch-acc-holder b{color:#fff;letter-spacing:.5px;}',
@@ -2230,10 +2232,12 @@
       { id: 'history',  label: '⟳ HISTORY' },
     ];
 
-    var ICON_COLORS = ['#2e7d32', '#6a1b9a', '#00838f', '#c62828', '#00695c', '#558b2f', '#37474f'];
-    var ICON_LETTERS = ['₮', 'G', '₿', 'X', 'M', 'U', '▲'];
-    var infoIcons = ICON_LETTERS.map(function (letter, i) {
-      return '<span class="ci" style="background:' + ICON_COLORS[i % ICON_COLORS.length] + '">' + letter + '</span>';
+    var BANK_LOGOS = [
+      '../assets/banks/golomt.jpg', '../assets/banks/xac.jpg', '../assets/banks/khan.jpg',
+      '../assets/banks/bogd.jpg', '../assets/banks/mbank.png', '../assets/banks/tdb.jpg', '../assets/banks/state.jpg'
+    ];
+    var infoIcons = BANK_LOGOS.map(function (src) {
+      return '<span class="ci"><img src="' + src + '" alt=""></span>';
     }).join('');
 
     var el = document.createElement('div');
@@ -2278,6 +2282,23 @@
     return el;
   }
 
+  var BANK_LOGO_MAP = [
+    { re: /голомт|golomt/i, src: '../assets/banks/golomt.jpg' },
+    { re: /хас|xac|khas/i, src: '../assets/banks/xac.jpg' },
+    { re: /хаан|khan/i, src: '../assets/banks/khan.jpg' },
+    { re: /богд|bogd/i, src: '../assets/banks/bogd.jpg' },
+    { re: /^м\s*банк|m\s*bank/i, src: '../assets/banks/mbank.png' },
+    { re: /ххб|тдб|худалдаа|tdb/i, src: '../assets/banks/tdb.jpg' },
+    { re: /төрийн|state/i, src: '../assets/banks/state.jpg' },
+  ];
+  function bankLogoFor(bankName) {
+    var name = bankName || '';
+    for (var i = 0; i < BANK_LOGO_MAP.length; i++) {
+      if (BANK_LOGO_MAP[i].re.test(name)) return BANK_LOGO_MAP[i].src;
+    }
+    return null;
+  }
+
   function loadCashierAccounts() {
     fetch('/api/accounts')
       .then(function (r) { return r.json(); })
@@ -2289,7 +2310,10 @@
         }
         el.innerHTML = '<div class="ch-acc-wrap">' + list.map(function (a) {
           var isIban = /^[A-Z]{2}\d/.test(a.number);
-          var badge = (a.bank || '?').trim().charAt(0).toUpperCase();
+          var logoSrc = bankLogoFor(a.bank);
+          var badge = logoSrc
+            ? '<img src="' + logoSrc + '" alt="">'
+            : (a.bank || '?').trim().charAt(0).toUpperCase();
           return '<div class="ch-acc-item">' +
             '<div class="ch-acc-top">' +
               '<span class="ch-acc-badge">' + badge + '</span>' +
