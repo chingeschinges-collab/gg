@@ -3090,14 +3090,28 @@
       showContact();
     });
 
-    /* Use capture+stopImmediatePropagation to block platform's own cashier dialog */
+    /* Нэвтэрсэн эсэхийг шалгах — public (нэвтрээгүй) үед login, private (нэвтэрсэн) үед данс */
+    function isLoggedIn() {
+      var userBlock = document.querySelector('.user_info_block');
+      if (userBlock && userBlock.classList.contains('notClientLogin')) return false;
+      if (document.querySelector('.MiniUserInfo__login_button')) return false;
+      return true;
+    }
+
+    /* Use capture+stopImmediatePropagation to block platform's own dialogs */
     document.addEventListener('click', function (e) {
       var t = e.target;
       while (t && t !== document) {
         if (t.classList && t.classList.contains('CashierButton')) {
           e.stopImmediatePropagation();
           e.preventDefault();
-          showCashier();
+          if (isLoggedIn()) showCashier(); else showLogin();
+          return;
+        }
+        if (t.classList && t.classList.contains('contact_admin')) {
+          e.stopImmediatePropagation();
+          e.preventDefault();
+          showContact();
           return;
         }
         t = t.parentNode;
