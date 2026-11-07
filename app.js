@@ -2167,40 +2167,89 @@
     if (!document.getElementById('cashier-css')) {
       var s = document.createElement('style');
       s.id = 'cashier-css';
-      s.textContent =
-        '#cashier-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10002;align-items:center;justify-content:center;}' +
-        '#cashier-modal{position:relative;background:#0a0a0f;border-radius:14px;width:min(94vw,520px);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.85);}' +
-        '#cashier-modal .ch-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid rgba(255,255,255,.07);}' +
-        '#cashier-modal .ch-title{color:#d4ac0d;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:8px;}' +
-        '#cashier-modal .ch-close{background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;line-height:1;padding:0;}' +
-        '#cashier-modal .ch-close:hover{color:#fff;}' +
-        '#cashier-modal .ch-body{padding:18px 22px 24px;}' +
-        '#cashier-modal .ch-label{color:rgba(255,255,255,.45);font-size:11px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px;}' +
-        '#cashier-modal .ch-card{background:#14141f;border:1px solid rgba(212,172,13,.25);border-radius:10px;padding:16px 18px;margin-bottom:12px;cursor:pointer;transition:border-color .15s;}' +
-        '#cashier-modal .ch-card:hover{border-color:#d4ac0d;}' +
-        '#cashier-modal .ch-card:last-child{margin-bottom:0;}' +
-        '#cashier-modal .ch-bank{font-size:12px;font-weight:700;color:#d4ac0d;margin-bottom:4px;}' +
-        '#cashier-modal .ch-num{font-size:20px;font-weight:700;letter-spacing:1.5px;color:#fff;margin-bottom:3px;}' +
-        '#cashier-modal .ch-holder{font-size:13px;color:rgba(255,255,255,.55);}' +
-        '#cashier-modal .ch-note{font-size:12px;color:rgba(255,255,255,.35);margin-top:6px;}' +
-        '#cashier-modal .ch-copy{float:right;background:rgba(212,172,13,.15);border:1px solid rgba(212,172,13,.3);color:#d4ac0d;border-radius:6px;font-size:11px;padding:3px 10px;cursor:pointer;}' +
-        '#cashier-modal .ch-copy:hover{background:rgba(212,172,13,.3);}' +
-        '#cashier-modal .ch-empty{color:rgba(255,255,255,.35);text-align:center;padding:32px 0;font-size:14px;}' +
-        '#cashier-modal .ch-copied{color:#2ecc71;font-size:11px;float:right;padding:3px 10px;}';
+      s.textContent = [
+        '#cashier-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10002;align-items:center;justify-content:center;}',
+        '#cashier-modal{position:relative;background:#181c24;border-radius:12px;width:min(96vw,760px);max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.9);}',
+        /* header */
+        '#cashier-modal .ch-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.08);}',
+        '#cashier-modal .ch-hdr-title{color:#fff;font-size:16px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}',
+        '#cashier-modal .ch-close{background:none;border:none;color:rgba(255,255,255,.45);font-size:24px;cursor:pointer;line-height:1;padding:0 2px;}',
+        '#cashier-modal .ch-close:hover{color:#fff;}',
+        /* tabs */
+        '#cashier-modal .ch-tabs{display:flex;border-bottom:1px solid rgba(255,255,255,.08);background:#12151c;overflow-x:auto;scrollbar-width:none;}',
+        '#cashier-modal .ch-tabs::-webkit-scrollbar{display:none}',
+        '#cashier-modal .ch-tab{flex:0 0 auto;padding:12px 18px;font-size:13px;font-weight:600;color:rgba(255,255,255,.45);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:6px;background:none;border-top:none;border-left:none;border-right:none;}',
+        '#cashier-modal .ch-tab.active{color:#d4ac0d;border-bottom-color:#d4ac0d;background:rgba(212,172,13,.06);}',
+        '#cashier-modal .ch-tab:hover:not(.active){color:rgba(255,255,255,.75);}',
+        /* body */
+        '#cashier-modal .ch-body{padding:20px 24px;overflow-y:auto;flex:1;}',
+        /* accounts tab */
+        '#cashier-modal .ch-subtitle{font-size:16px;font-weight:700;color:#fff;margin-bottom:8px;}',
+        '#cashier-modal .ch-info{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:18px;display:flex;align-items:center;gap:8px;}',
+        '#cashier-modal .ch-acc-card{background:#0d1117;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px 20px;margin-bottom:12px;}',
+        '#cashier-modal .ch-acc-card:last-of-type{margin-bottom:0;}',
+        '#cashier-modal .ch-acc-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;}',
+        '#cashier-modal .ch-acc-bank{font-size:13px;font-weight:600;color:rgba(255,255,255,.75);}',
+        '#cashier-modal .ch-acc-holder{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:8px;}',
+        '#cashier-modal .ch-acc-holder b{color:#d4ac0d;}',
+        '#cashier-modal .ch-acc-row{display:flex;align-items:center;gap:12px;}',
+        '#cashier-modal .ch-acc-num{font-size:26px;font-weight:700;letter-spacing:2px;color:#fff;flex:1;}',
+        '#cashier-modal .ch-acc-num.iban{color:#2ecc71;font-size:20px;}',
+        '#cashier-modal .ch-copy-btn{background:#d4ac0d;color:#1a1200;border:none;border-radius:6px;font-size:13px;font-weight:700;padding:7px 18px;cursor:pointer;white-space:nowrap;flex-shrink:0;}',
+        '#cashier-modal .ch-copy-btn:active{background:#b8940a;}',
+        '#cashier-modal .ch-copy-btn.copied{background:#2ecc71;color:#fff;}',
+        '#cashier-modal .ch-warning{display:flex;gap:10px;background:rgba(0,0,0,.3);border-radius:8px;padding:14px 16px;margin-top:16px;font-size:13px;color:rgba(255,255,255,.65);line-height:1.6;}',
+        '#cashier-modal .ch-warning .dot{color:#e74c3c;font-size:16px;flex-shrink:0;margin-top:1px;}',
+        '#cashier-modal .ch-report-btn{display:block;width:100%;margin-top:14px;background:#3498db;color:#fff;border:none;border-radius:8px;padding:12px;font-size:14px;font-weight:700;cursor:pointer;text-align:center;}',
+        '#cashier-modal .ch-report-btn:hover{background:#2980b9;}',
+        /* other tabs */
+        '#cashier-modal .ch-soon{text-align:center;padding:48px 0;color:rgba(255,255,255,.3);font-size:14px;}',
+        '#cashier-modal .ch-empty{color:rgba(255,255,255,.3);text-align:center;padding:36px 0;font-size:14px;}',
+      ].join('');
       document.head.appendChild(s);
     }
+
+    var TABS = [
+      { id: 'dans',     label: '⊟ ДАНС' },
+      { id: 'deposit',  label: '⊕ DEPOSIT' },
+      { id: 'status',   label: 'ⓘ STATUS' },
+      { id: 'cashout',  label: '⊖ CASH OUT' },
+      { id: 'transfer', label: '⇄ TRANSFER' },
+      { id: 'exchange', label: '⇆ EXCHANGE' },
+      { id: 'history',  label: '⟳ HISTORY' },
+    ];
+
     var el = document.createElement('div');
     el.id = 'cashier-popup';
     el.innerHTML =
-      '<div id="cashier-bg" style="position:absolute;inset:0;background:rgba(0,0,0,.72);"></div>' +
+      '<div id="cashier-bg" style="position:absolute;inset:0;background:rgba(0,0,0,.75);"></div>' +
       '<div id="cashier-modal">' +
-        '<div class="ch-header">' +
-          '<span class="ch-title">💳 Мөнгөний касс</span>' +
+        '<div class="ch-hdr">' +
+          '<span class="ch-hdr-title">CASHIER</span>' +
           '<button class="ch-close" id="cashier-close-btn">✕</button>' +
         '</div>' +
+        '<div class="ch-tabs">' +
+          TABS.map(function (t) {
+            return '<button class="ch-tab' + (t.id === 'dans' ? ' active' : '') + '" data-ch-tab="' + t.id + '">' + t.label + '</button>';
+          }).join('') +
+        '</div>' +
         '<div class="ch-body">' +
-          '<div class="ch-label">Цэнэглэх данснууд</div>' +
-          '<div id="cashier-accounts"><div class="ch-empty">Ачааллаж байна...</div></div>' +
+          '<div id="ch-panel-dans">' +
+            '<div class="ch-subtitle">Шилжүүлэх данс:</div>' +
+            '<div class="ch-info">Та аль ч банкнаас цэнэглэлт хийж болно.</div>' +
+            '<div id="cashier-accounts"><div class="ch-empty">Ачааллаж байна...</div></div>' +
+            '<div class="ch-warning">' +
+              '<span class="dot">●</span>' +
+              '<span>Та шилжүүлэг хийхдээ гүйлгээний утган дээрээ өөрийн <b style="color:#d4ac0d">Тоглогчийн нэрийг</b> сайтар шалгаж, үнэн зөв оруулна уу. Хэрэв 5 минутын дотор ороогүй бол манай үйлчилгээний албанд баримтаа хавсарган, хандана уу!!</span>' +
+            '</div>' +
+            '<button class="ch-report-btn" id="cashier-report-btn">Цэнэг ороогүй бол энд дарна уу!</button>' +
+          '</div>' +
+          '<div id="ch-panel-deposit" style="display:none"><div class="ch-soon">Тун удахгүй...</div></div>' +
+          '<div id="ch-panel-status" style="display:none"><div class="ch-soon">Тун удахгүй...</div></div>' +
+          '<div id="ch-panel-cashout" style="display:none"><div class="ch-soon">Тун удахгүй...</div></div>' +
+          '<div id="ch-panel-transfer" style="display:none"><div class="ch-soon">Тун удахгүй...</div></div>' +
+          '<div id="ch-panel-exchange" style="display:none"><div class="ch-soon">Тун удахгүй...</div></div>' +
+          '<div id="ch-panel-history" style="display:none"><div class="ch-soon">Тун удахгүй...</div></div>' +
         '</div>' +
       '</div>';
     return el;
@@ -2215,24 +2264,28 @@
           el.innerHTML = '<div class="ch-empty">Данс байхгүй байна. Дараа шалгана уу.</div>';
           return;
         }
-        el.innerHTML = list.map(function (a, i) {
-          return '<div class="ch-card">' +
-            '<button class="ch-copy" data-num="' + a.number + '">Хуулах</button>' +
-            '<div class="ch-bank">🏦 ' + a.bank + '</div>' +
-            '<div class="ch-num">' + a.number + '</div>' +
-            (a.holder ? '<div class="ch-holder">👤 ' + a.holder + '</div>' : '') +
-            (a.note ? '<div class="ch-note">' + a.note + '</div>' : '') +
+        el.innerHTML = list.map(function (a) {
+          var isIban = /^[A-Z]{2}\d/.test(a.number);
+          return '<div class="ch-acc-card">' +
+            '<div class="ch-acc-top">' +
+              '<span style="font-size:18px">🏦</span>' +
+              '<span class="ch-acc-bank">' + a.bank + '</span>' +
+            '</div>' +
+            (a.holder ? '<div class="ch-acc-holder">Данс эзэмшигч: <b>' + a.holder + '</b></div>' : '') +
+            '<div class="ch-acc-row">' +
+              '<div class="ch-acc-num' + (isIban ? ' iban' : '') + '">' + a.number + '</div>' +
+              '<button class="ch-copy-btn" data-num="' + a.number + '">Copy</button>' +
+            '</div>' +
+            (a.note ? '<div style="font-size:12px;color:rgba(255,255,255,.3);margin-top:6px;">' + a.note + '</div>' : '') +
           '</div>';
         }).join('');
-        el.querySelectorAll('.ch-copy').forEach(function (btn) {
-          btn.addEventListener('click', function (e) {
-            e.stopPropagation();
+        el.querySelectorAll('.ch-copy-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
             var num = btn.getAttribute('data-num');
-            navigator.clipboard.writeText(num).then(function () {
-              btn.textContent = '✓ Хуулагдлаа';
-              btn.className = 'ch-copied';
-              setTimeout(function () { btn.textContent = 'Хуулах'; btn.className = 'ch-copy'; }, 2000);
-            });
+            navigator.clipboard.writeText(num).catch(function () {});
+            btn.textContent = '✓ Copied';
+            btn.classList.add('copied');
+            setTimeout(function () { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
           });
         });
       })
@@ -2244,6 +2297,13 @@
   function showCashier() {
     var p = document.getElementById('cashier-popup');
     if (!p) return;
+    /* reset to ДАНС tab */
+    p.querySelectorAll('.ch-tab').forEach(function (t) { t.classList.remove('active'); });
+    var firstTab = p.querySelector('.ch-tab[data-ch-tab="dans"]');
+    if (firstTab) firstTab.classList.add('active');
+    p.querySelectorAll('[id^="ch-panel-"]').forEach(function (panel) { panel.style.display = 'none'; });
+    var dansPanel = p.querySelector('#ch-panel-dans');
+    if (dansPanel) dansPanel.style.display = '';
     p.style.display = 'flex';
     loadCashierAccounts();
   }
@@ -3010,6 +3070,25 @@
     document.body.appendChild(buildCashierPopup());
     document.getElementById('cashier-close-btn').addEventListener('click', hideCashier);
     document.getElementById('cashier-bg').addEventListener('click', hideCashier);
+
+    /* Cashier tab switching */
+    document.querySelectorAll('#cashier-popup .ch-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('#cashier-popup .ch-tab').forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        var id = tab.getAttribute('data-ch-tab');
+        document.querySelectorAll('#cashier-popup [id^="ch-panel-"]').forEach(function (p) { p.style.display = 'none'; });
+        var panel = document.getElementById('ch-panel-' + id);
+        if (panel) panel.style.display = '';
+        if (id === 'dans') loadCashierAccounts();
+      });
+    });
+
+    /* "Цэнэг ороогүй бол энд дарна уу!" → Contact Admin popup */
+    document.getElementById('cashier-report-btn').addEventListener('click', function () {
+      hideCashier();
+      showContact();
+    });
 
     /* Use capture+stopImmediatePropagation to block platform's own cashier dialog */
     document.addEventListener('click', function (e) {
