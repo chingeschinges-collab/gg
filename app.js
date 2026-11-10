@@ -5,9 +5,23 @@
      1. LOGIN POPUP  — loginui.html-н HTML
   ═══════════════════════════════════════ */
   function buildLoginPopup() {
+    if (!document.getElementById('login-css')) {
+      var ls = document.createElement('style');
+      ls.id = 'login-css';
+      /* Утасны нарийн дэлгэц дээр LoginContainer__form_fields нь эцэг popup-оосоо
+         өргөн болж, доторх absolute-position хэлний сонголт (LoginContainer__language)
+         баруун хажуу руугаа дэлгэц гаднаас гардаг — энэ 2-ыг зогсооно */
+      ls.textContent =
+        '@media (max-width:480px){' +
+          '#login-popup .LoginContainer__form_fields{width:100%!important;max-width:100%!important;}' +
+          '#login-popup .LoginContainer__language{position:static!important;left:auto!important;right:auto!important;display:inline-flex!important;margin-left:auto!important;float:right!important;}' +
+          '#login-popup .LoginContainer__remember_me{display:flex!important;align-items:center!important;flex-wrap:wrap!important;}' +
+        '}';
+      document.head.appendChild(ls);
+    }
     var el = document.createElement('div');
     el.id        = 'login-popup';
-    el.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;align-items:center;justify-content:center;';
+    el.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;align-items:center;justify-content:center;';
 
     el.innerHTML = [
       '<div id="login-modal-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.58);pointer-events:none;"></div>',
@@ -247,7 +261,7 @@
 
     var el = document.createElement('div');
     el.id = 'register-popup';
-    el.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;align-items:center;justify-content:center;';
+    el.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;align-items:center;justify-content:center;';
     el.innerHTML =
       '<div class="Popup__overlay" style="position:absolute;inset:0;background:rgba(0,0,0,0.58);pointer-events:none;"></div>' +
       '<div id="register-wrapper" style="position:relative;display:flex;width:min(92vw,400px);height:min(90vh,580px);">' +
@@ -704,13 +718,36 @@
         '#settings-popup .tt-btn.call{background:#2e7d46}' +
         '#settings-popup .tt-btn.raise{background:#2e7d46}' +
         '#settings-popup .tt-bet{background:#fff;color:#111;font-size:11px;border-radius:4px;padding:5px 10px}' +
-        '#settings-popup .tt-chip{background:#3a3a3a;color:#fff;font-size:10px;border:1px solid rgba(255,255,255,.25);border-radius:4px;padding:4px 8px}';
+        '#settings-popup .tt-chip{background:#3a3a3a;color:#fff;font-size:10px;border:1px solid rgba(255,255,255,.25);border-radius:4px;padding:4px 8px}' +
+        /* Утасны нарийн дэлгэц дээр .Dialog__popup_content нь платформын томоор заасан
+           өргөн рүүгээ (1300px+) алдагддаг тул энд хязгаарлаж, доторх баганууд нь
+           зэрэгцсэн биш давхарлаж байрлахаар болгоно */
+        '@media (max-width:480px){' +
+          '#settings-popup .Popup__content{width:92vw!important;max-width:92vw!important;box-sizing:border-box!important;}' +
+          '#settings-popup .Dialog__tabs_content,#settings-popup .TabButtonsRow__items{overflow-x:auto!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch;}' +
+          '#settings-popup .TabButtonsRow__button{flex-shrink:0!important;}' +
+          '#settings-popup .appth-wrap,#settings-popup .tt-wrap{flex-wrap:wrap!important;gap:14px!important;}' +
+          '#settings-popup .appth-mock{width:min(34em,80vw)!important;}' +
+          '#settings-popup .tt-table{max-width:100%!important;}' +
+          '#settings-popup .TableSettingsContainer__content_items{width:100%!important;box-sizing:border-box!important;}' +
+          /* Checkbox мөр бүрийг бэхлэгдсэн өндөртэйгөөс чөлөөлж, 2 багана биш 1 багана болгоно —
+             текст олон мөр болоход зэргэлдээ мөртэй давхцахаас сэргийлнэ */
+          '#settings-popup .TableSettingsContainer__setting_item{width:100%!important;flex:1 1 100%!important;height:auto!important;min-height:auto!important;}' +
+          /* Dialog бүхэлдээ viewport-ээс гадагш гарч гарчиг/товч тасрахгүй байхаар
+             гаднах хайрцгийг өндрөөр нь хязгаарлаж, дотоод scroll-panel-д зайг нь өгнө */
+          '#settings-popup .Popup__content{max-height:88vh!important;display:flex!important;flex-direction:column!important;}' +
+          '#settings-popup .Dialog__content{flex:1 1 auto!important;min-height:0!important;overflow:hidden!important;}' +
+          '#settings-popup .SettingsPopupContainer__content,#settings-popup .scroll-panel{height:100%!important;}' +
+          /* Reset/Save товч хоёр зэрэгцэж шахагдаж байсныг босоогоор давхарлана */
+          '#settings-popup .Dialog__actions{flex-direction:column!important;gap:8px!important;flex-shrink:0!important;}' +
+          '#settings-popup .Dialog__action{width:100%!important;flex:1 1 auto!important;justify-content:center!important;position:relative!important;min-height:44px!important;}' +
+        '}';
       document.head.appendChild(sc);
     }
 
     var el = document.createElement('div');
     el.id = 'settings-popup';
-    el.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:9998;align-items:center;justify-content:center;';
+    el.style.cssText = 'display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9998;align-items:center;justify-content:center;';
 
     el.innerHTML =
       '<div id="settings-modal-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.58);"></div>' +
@@ -2074,7 +2111,7 @@
       var s = document.createElement('style');
       s.id = 'contact-css';
       s.textContent =
-        '#contact-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10002;align-items:center;justify-content:center;}' +
+        '#contact-popup{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10002;align-items:center;justify-content:center;}' +
         '#contact-modal{position:relative;background:#0a0a0f;border-radius:14px;width:min(94vw,640px);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.8);}' +
         '#contact-modal .cm-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;}' +
         '#contact-modal .cm-title{color:#fff;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}' +
@@ -2168,7 +2205,7 @@
       var s = document.createElement('style');
       s.id = 'cashier-css';
       s.textContent = [
-        '#cashier-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:10002;align-items:center;justify-content:center;}',
+        '#cashier-popup{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:10002;align-items:center;justify-content:center;}',
         '#cashier-modal{position:relative;background:#1b1f27;border-radius:10px;width:min(96vw,780px);max-height:92vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.9);font-family:Georgia,"Times New Roman",serif;}',
         /* header */
         '#cashier-modal .ch-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 26px;}',
