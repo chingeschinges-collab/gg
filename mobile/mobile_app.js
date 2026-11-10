@@ -338,5 +338,44 @@
       if (e.target.closest("#sidebar-close-btn") || e.target.id === "sidebar-overlay")
         window.closeSidebar();
     });
+
+    /* ── Мөнгөн ширээний жагсаалт: мөр дарахад ширээ нээгдэнэ ── */
+    var tableRows = Array.prototype.slice.call(
+      document.querySelectorAll(".CashTablesContainer__list_item")
+    ).filter(function (r) { return !r.classList.contains("headItem"); });
+
+    tableRows.forEach(function (row) {
+      row.style.cursor = "pointer";
+      row.addEventListener("click", function () {
+        if (window.openTable) window.openTable(row);
+      });
+    });
+
+    /* ── Хайх талбар: ширээний нэрээр шүүнэ ── */
+    var mSearch = document.querySelector(".input_filter");
+    if (mSearch) {
+      mSearch.addEventListener("input", function () {
+        var q = mSearch.value.trim().toLowerCase();
+        tableRows.forEach(function (row) {
+          var nameEl = row.querySelector(".name__text_col .name");
+          var name = nameEl ? nameEl.textContent.toLowerCase() : "";
+          row.style.display = (!q || name.indexOf(q) >= 0) ? "" : "none";
+        });
+      });
+    }
+
+    /* ── Толгой хэсгийн буцах / шүүлтүүр товч ── */
+    var headerBackBtn = document.querySelector(".NavigationContainer__action_back");
+    if (headerBackBtn) headerBackBtn.addEventListener("click", function () {
+      if (window.history.length > 1) window.history.back();
+    });
+
+    var headerFilterBtn = document.querySelector(
+      ".NavigationPanel__action.SimpleButton_use_icon:not(.NavigationContainer__action_back)"
+    );
+    if (headerFilterBtn && mSearch) headerFilterBtn.addEventListener("click", function () {
+      mSearch.scrollIntoView({ behavior: "smooth", block: "center" });
+      mSearch.focus();
+    });
   });
 })();

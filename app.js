@@ -2056,13 +2056,19 @@
         var e = row.querySelector('.' + cls + ' .text, .' + cls + ' .Table__body_item_text');
         return e ? e.textContent.trim() : '';
       };
+      /* Утасны CashTablesContainer__list_item мөр desktop-оос өөр класс ашигладаг тул
+         тэдгээрийг нэмэлт эх сурвалж болгон шалгана */
+      var mName   = row.querySelector('.name__text_col .name');
+      var mGame   = row.querySelector('.gameType__text_row .gameType, .gameType');
+      var mStakes = row.querySelector('.stakes__text_row .stakes, .stakes');
+      var mPlayers= row.querySelector('.players__text_row .players, .players');
       var limit = rowLimit(row);
       var limitLabel = limit === 'pot' ? 'Pot Limit' : limit === 'fixed' ? 'Fixed' : 'No Limit';
       info = {
-        name:   txt('tct-name') || 'Table',
-        game:   (txt('tct-game-type') || "Hold'em") + ' ' + limitLabel,
-        stakes: txt('tct-stakes') || '',
-        seated: parseInt(txt('tct-num-players'), 10) || 9
+        name:   txt('tct-name') || (mName ? mName.textContent.trim() : '') || 'Table',
+        game:   (txt('tct-game-type') || (mGame ? mGame.textContent.trim() : '') || "Hold'em") + ' ' + limitLabel,
+        stakes: txt('tct-stakes') || (mStakes ? mStakes.textContent.replace(/^Stakes:\s*/i, '').trim() : ''),
+        seated: parseInt(txt('tct-num-players'), 10) || parseInt(mPlayers ? mPlayers.textContent : '', 10) || 9
       };
     }
 
@@ -2081,7 +2087,9 @@
         try { wireTableButtons(frame.contentDocument); } catch (e) {}
         renderTableTabs();
       });
-      frame.setAttribute('src', 'table.html');   // relative to /desktop/
+      /* table.html нь зөвхөн /desktop/ хавтаст байдаг тул mobile хуудаснаас дуудахад замыг тохируулна */
+      var tableSrc = location.pathname.indexOf('/mobile/') !== -1 ? '../desktop/table.html' : 'table.html';
+      frame.setAttribute('src', tableSrc);
       v.appendChild(frame);
       openTables.push({ info: info, frame: frame });
       idx = openTables.length - 1;
@@ -3684,7 +3692,8 @@
   }
 
   function initLobbyChat() {
-    var btn = document.querySelector('.LobbyFooterButtonsContainer__button.chat');
+    /* Desktop footer эсвэл mobile-ийн PhoneFooterContainer аль алинд нь тохирно */
+    var btn = document.querySelector('.LobbyFooterButtonsContainer__button.chat, .PhoneFooterContainer__chat');
     if (!btn) return;
     var panel = null;
     var count = btn.querySelector('.SimpleButton__text');
