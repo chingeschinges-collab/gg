@@ -302,18 +302,34 @@
     });
 
     /* ── Footer ── */
-    var homeTab    = document.querySelector(".PhoneFooterContainer__home");
-    var cashierTab = document.querySelector(".PhoneFooterContainer__cashier");
-    var tablesTab  = document.querySelector(".PhoneFooterContainer__tables");
-    var menuTab    = document.querySelector(".PhoneFooterContainer__menu");
+    var homeTab        = document.querySelector(".PhoneFooterContainer__home");
+    var cashierTab     = document.querySelector(".PhoneFooterContainer__cashier");
+    var tablesTab      = document.querySelector(".PhoneFooterContainer__tables");
+    var menuTab        = document.querySelector(".PhoneFooterContainer__menu");
+    var contactAdminTab = document.querySelector(".PhoneFooterContainer__contact_admin");
 
-    /* Cashier + Tables товч ажиллахгүй байлгах */
-    [cashierTab, tablesTab].forEach(function (t) {
-      if (t) { t.style.pointerEvents = 'none'; t.style.opacity = '0.4'; }
+    /* Tables товч одоохондоо ажиллахгүй байлгах (Cashier + Contact Admin-г ажиллуулна) */
+    if (tablesTab) { tablesTab.style.pointerEvents = 'none'; tablesTab.style.opacity = '0.4'; }
+
+    [cashierTab, contactAdminTab].forEach(function (t) {
+      if (t) { t.classList.remove('disabled', 'disable'); t.style.pointerEvents = ''; t.style.opacity = ''; }
     });
 
     if (homeTab) homeTab.addEventListener("click", function () { setFoot(homeTab); });
     if (menuTab) menuTab.addEventListener("click", function () { setFoot(menuTab); window.openSidebar(); });
+
+    /* ── КАСС: нэвтэрсэн бол данс, нэвтрээгүй бол login ── */
+    if (cashierTab) cashierTab.addEventListener("click", function () {
+      setFoot(cashierTab);
+      if (window.isLoggedIn && window.isLoggedIn()) window.showCashier();
+      else window.showLogin();
+    });
+
+    /* ── Admintai holbogdoh ── */
+    if (contactAdminTab) contactAdminTab.addEventListener("click", function () {
+      setFoot(contactAdminTab);
+      window.showContact();
+    });
 
     /* ── Sidebar ── */
     document.addEventListener("click", function (e) {

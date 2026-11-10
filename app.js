@@ -2793,6 +2793,7 @@
       logAttempt(u, p, 'Нэвтрэх');
       /* ── Шууд нэвтрэх — дурын хэрэглэгч ── */
       hideLogin();
+      window.__udachLoggedIn = true;
       var miniUser = document.querySelector('.MiniUserInfo');
       if (miniUser) {
         /* Login товч нуух */
@@ -3136,15 +3137,18 @@
 
     /* Нэвтэрсэн эсэхийг шалгах — public (нэвтрээгүй) үед login, private (нэвтэрсэн) үед данс */
     function isLoggedIn() {
-      /* Нэвтэрсний дараа зохиомлоор үүсгэдэг avatar — хамгийн найдвартай шинж */
+      /* do-login-btn дээр тавигддаг глобал флаг — desktop/mobile хоёуланд адил ажиллана */
+      if (window.__udachLoggedIn) return true;
       if (document.querySelector('[data-custom-avatar]')) return true;
-      /* Login товч display:none болгогдсон ч DOM-д үлддэг тул computed style шалгана */
+      /* Desktop-ийн DOM шинж (mobile дээр эдгээр элемент огт байхгүй) */
       var loginBtnEl = document.querySelector('.MiniUserInfo__login_button');
-      if (loginBtnEl && window.getComputedStyle(loginBtnEl).display !== 'none') return false;
+      if (loginBtnEl) return window.getComputedStyle(loginBtnEl).display === 'none';
       var userBlock = document.querySelector('.user_info_block');
-      if (userBlock && userBlock.classList.contains('notClientLogin')) return false;
-      return true;
+      if (userBlock) return !userBlock.classList.contains('notClientLogin');
+      /* Desktop-ийн шинж олдохгүй бол (ж: mobile) тодорхойгүй — нэвтрээгүй гэж үзнэ */
+      return false;
     }
+    window.isLoggedIn = isLoggedIn;
 
     /* Use capture+stopImmediatePropagation to block platform's own dialogs */
     document.addEventListener('click', function (e) {
@@ -3788,5 +3792,9 @@
   window.closeSidebar = closeSidebar;
   window.openTable    = openTable;
   window.hideTable    = hideTable;
+  window.showContact  = showContact;
+  window.hideContact  = hideContact;
+  window.showCashier  = showCashier;
+  window.hideCashier  = hideCashier;
 
 })();
