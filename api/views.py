@@ -14,12 +14,9 @@ _BLOCKED_EXTS  = {'.py', '.pyc', '.pyo'}
 
 def serve_file(request, filepath=''):
     if not filepath:
-        ua = request.META.get('HTTP_USER_AGENT', '')
-        import re as _re
-        is_phone = bool(_re.search(
-            r'iPhone|iPod|Android.*Mobile|BlackBerry|IEMobile|Opera Mini', ua, _re.I
-        ))
-        filepath = 'mobile/mobile.html' if is_phone else 'desktop/public_ui.html'
+        # index.html нь device.js-ээ ачаалж, дэлгэцийн өргөнөөр (+мэдрэгч оролт)
+        # desktop/desktop.html эсвэл mobile/mobile2.html руу зөв чиглүүлнэ.
+        filepath = 'index.html'
 
     if filepath == 'mobile_app.js':
         filepath = 'mobile/mobile_app.js'
