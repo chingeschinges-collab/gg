@@ -339,43 +339,44 @@
         window.closeSidebar();
     });
 
-    /* ── Мөнгөн ширээний жагсаалт: мөр дарахад ширээ нээгдэнэ ── */
-    var tableRows = Array.prototype.slice.call(
-      document.querySelectorAll(".CashTablesContainer__list_item")
-    ).filter(function (r) { return !r.classList.contains("headItem"); });
+    /* ── Мөнгөн ширээний жагсаалт: мөр дарахад ширээ нээгдэнэ (delegated — ──
+       ширээний мөрүүд DOMContentLoaded-ийн дараа асинхроноор render хийгддэг
+       тул document дээр нэг удаа delegated listener тавьж race condition-с сэргийлнэ) */
+    var tableListCss = document.createElement("style");
+    tableListCss.textContent = ".CashTablesContainer__list_item:not(.headItem){cursor:pointer;}";
+    document.head.appendChild(tableListCss);
 
-    tableRows.forEach(function (row) {
-      row.style.cursor = "pointer";
-      row.addEventListener("click", function () {
-        if (window.openTable) window.openTable(row);
+    document.addEventListener("click", function (e) {
+      var row = e.target.closest && e.target.closest(".CashTablesContainer__list_item");
+      if (!row || row.classList.contains("headItem")) return;
+      if (window.openTable) window.openTable(row);
+    });
+
+    /* ── Хайх талбар: ширээний нэрээр шүүнэ (delegated) ── */
+    document.addEventListener("input", function (e) {
+      if (!e.target.classList || !e.target.classList.contains("input_filter")) return;
+      var q = e.target.value.trim().toLowerCase();
+      document.querySelectorAll(".CashTablesContainer__list_item").forEach(function (row) {
+        if (row.classList.contains("headItem")) return;
+        var nameEl = row.querySelector(".name__text_col .name");
+        var name = nameEl ? nameEl.textContent.toLowerCase() : "";
+        row.style.display = (!q || name.indexOf(q) >= 0) ? "" : "none";
       });
     });
 
-    /* ── Хайх талбар: ширээний нэрээр шүүнэ ── */
-    var mSearch = document.querySelector(".input_filter");
-    if (mSearch) {
-      mSearch.addEventListener("input", function () {
-        var q = mSearch.value.trim().toLowerCase();
-        tableRows.forEach(function (row) {
-          var nameEl = row.querySelector(".name__text_col .name");
-          var name = nameEl ? nameEl.textContent.toLowerCase() : "";
-          row.style.display = (!q || name.indexOf(q) >= 0) ? "" : "none";
-        });
-      });
-    }
-
-    /* ── Толгой хэсгийн буцах / шүүлтүүр товч ── */
-    var headerBackBtn = document.querySelector(".NavigationContainer__action_back");
-    if (headerBackBtn) headerBackBtn.addEventListener("click", function () {
-      if (window.history.length > 1) window.history.back();
-    });
-
-    var headerFilterBtn = document.querySelector(
-      ".NavigationPanel__action.SimpleButton_use_icon:not(.NavigationContainer__action_back)"
-    );
-    if (headerFilterBtn && mSearch) headerFilterBtn.addEventListener("click", function () {
-      mSearch.scrollIntoView({ behavior: "smooth", block: "center" });
-      mSearch.focus();
+    /* ── Толгой хэсгийн буцах / шүүлтүүр товч (delegated) ── */
+    document.addEventListener("click", function (e) {
+      if (e.target.closest && e.target.closest(".NavigationContainer__action_back")) {
+        if (window.history.length > 1) window.history.back();
+        return;
+      }
+      var filterBtn = e.target.closest && e.target.closest(
+        ".NavigationPanel__action.SimpleButton_use_icon:not(.NavigationContainer__action_back)"
+      );
+      if (filterBtn) {
+        var mSearch = document.querySelector(".input_filter");
+        if (mSearch) { mSearch.scrollIntoView({ behavior: "smooth", block: "center" }); mSearch.focus(); }
+      }
     });
   });
 })();
